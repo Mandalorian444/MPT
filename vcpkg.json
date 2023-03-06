@@ -1,0 +1,30 @@
+{
+    "name": "manual-price-tracker",
+    "version-date": "2023-03-02",
+    "license": null,
+    "dependencies": [
+        "glfw3",
+        "glew",
+        "glm",
+        {
+            "name": "imgui",
+            "version>=": "1.84.1",
+            "features": [
+                "docking-experimental",
+                "glfw-binding",
+                "opengl3-binding"
+                ]
+        },
+        "implot",
+        "pugixml"
+    ],
+    "builtin-baseline": "a295be21f60b749e5bbe6454ed11c246d074710c",
+    "overrides": [
+        { "name": "glfw3", "version": "3.3.8" },
+        { "name": "glew", "version": "2.2.0" },
+        { "name": "glm", "version": "0.9.9.8#1" },
+        { "name": "imgui", "version": "1.88#1" },
+        { "name": "implot", "version": "0.13" },
+        { "name": "pugixml", "version": "1.12.1#1"}
+    ]
+}
