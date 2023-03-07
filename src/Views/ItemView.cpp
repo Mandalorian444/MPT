@@ -273,7 +273,7 @@ void ItemView::onImGuiRender(Application& app)
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
-                if (ImGui::Button("Close popup"))
+                if (ImGui::Button("Cancel"))
                 {
                     _tempOrigItemName.clear();
                     _tempEntry.clear();
