@@ -85,3 +85,18 @@ void Entry::clear() noexcept
     _brand.clear();
     _date.setDate(Date(1, Months::January, 2023));
 }
+
+bool Entry::operator==(const Entry& entry) const noexcept
+{
+    return
+        _price      == entry._price &&
+        _store      == entry._store &&
+        _location   == entry._location &&
+        _brand      == entry._brand &&
+        _date       == entry._date;
+}
+
+bool Entry::operator!=(const Entry& entry) const noexcept
+{
+    return !(*this == entry);
+}

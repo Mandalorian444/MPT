@@ -44,6 +44,9 @@ public:
     //void setWeight(Weight weight) noexcept;
 
     void clear() noexcept;
+
+    bool operator==(const Entry& entry) const noexcept;
+    bool operator!=(const Entry& entry) const noexcept;
 };
 
 class Item

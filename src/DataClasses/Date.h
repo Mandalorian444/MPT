@@ -204,4 +204,7 @@ public:
     //  MM DD, YYYY
     std::string getDateWordString() const noexcept;
     std::string getAbbreviatedDateWordString() const noexcept;
+
+    bool operator==(const Date& date) const noexcept;
+    bool operator!=(const Date& date) const noexcept;
 };

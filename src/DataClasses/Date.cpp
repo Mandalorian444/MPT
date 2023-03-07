@@ -42,3 +42,16 @@ std::string Date::getAbbreviatedDateWordString() const noexcept
 {
     return _getDateString(true);
 }
+
+bool Date::operator==(const Date& date) const noexcept
+{
+    return
+        _day    == date._day &&
+        _month  == date._month &&
+        _year   == date._year;
+}
+
+bool Date::operator!=(const Date& date) const noexcept
+{
+    return !(*this == date);
+}
