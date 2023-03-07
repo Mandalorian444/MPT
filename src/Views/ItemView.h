@@ -11,6 +11,8 @@ class ItemView : public Viewable
 private:
     std::string _tempItemName;
     Entry _tempEntry;
+    std::string _selectedItem;
+    Entry _selectedEntry;
 
     void _popupItemFields(Application& app);
 public:
