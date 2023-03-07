@@ -162,6 +162,7 @@ void ItemView::onImGuiRender(Application& app)
 {
     if (ImGui::Begin("ItemView"))
     {
+        Model& model = app.getModel();
         ImGuiStyle& style = ImGui::GetStyle();
         const ImVec2 textSize = ImGui::CalcTextSize("Add Item");
         const float width = ImGui::GetContentRegionAvail().x;
@@ -183,7 +184,7 @@ void ItemView::onImGuiRender(Application& app)
             ImGui::TableSetupColumn("Weight");
             ImGui::TableHeadersRow();
 
-            auto& items = app.getModel().getItems();
+            auto& items = model.getItems();
             int itemCount = 0;
             for (auto it : items)
             {
@@ -266,7 +267,7 @@ void ItemView::onImGuiRender(Application& app)
 
                 if (ImGui::Button("Add Item"))
                 {
-                    app.getModel().addItem(_tempOrigItemName, _tempEntry);
+                    model.addItem(_tempOrigItemName, _tempEntry);
                     _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
@@ -289,7 +290,7 @@ void ItemView::onImGuiRender(Application& app)
 
                 if (ImGui::Button("Save"))
                 {
-                    app.getModel().editItem(_tempOrigItemName, _tempNewItemName);
+                    model.editItem(_tempOrigItemName, _tempNewItemName);
                     _selectedItem = _tempNewItemName;
                     _selectedEntry = _tempEntry;
                     _tempOrigItemName.clear();
@@ -315,7 +316,7 @@ void ItemView::onImGuiRender(Application& app)
 
                 if (ImGui::Button("Save"))
                 {
-                    app.getModel().editEntry(
+                    model.editEntry(
                         _tempOrigItemName,
                         static_cast<size_t>(_selectedEntryIndex),
                         _tempEntry
