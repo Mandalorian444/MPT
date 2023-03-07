@@ -181,6 +181,15 @@ void ItemView::onImGuiRender(Application& app)
                     );
                 }
 
+                ImGui::Text("Brand");
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                std::string brand = _tempEntry.getBrand();
+                if (ImGui::InputText("##ItemBrandInput", &brand, textInputFlags))
+                {
+                    _tempEntry.setBrand(brand);
+                }
+
                 ImGui::Text("Store");
                 ImGui::SameLine();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
