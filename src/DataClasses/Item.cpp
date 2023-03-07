@@ -15,6 +15,11 @@ void Item::addEntry(Entry entry)
     _entries.push_back(std::move(entry));
 }
 
+void Item::editEntry(const size_t index, Entry entry) noexcept(false)
+{
+    _entries.at(index) = entry;
+}
+
 void Item::removeEntry(const size_t& index)
 {
     if (index < _entries.size())
@@ -84,6 +89,15 @@ void Entry::clear() noexcept
     _location.clear();
     _brand.clear();
     _date.setDate(Date(1, Months::January, 2023));
+}
+
+void Entry::operator=(const Entry& entry) noexcept
+{
+    _price      = entry._price;
+    _store      = entry._store;
+    _location   = entry._location;
+    _brand      = entry._brand;
+    _date       = entry._date;
 }
 
 bool Entry::operator==(const Entry& entry) const noexcept

@@ -18,6 +18,15 @@ public:
 
     void addItem(const std::string& item, Entry entry) noexcept;
     void addEntry(const std::string& item, Entry entry) noexcept(false);
+    void editItem(
+        const std::string& origItem,
+        const std::string& newItem
+    ) noexcept;
+    void editEntry(
+        const std::string& item,
+        const size_t entryIndex,
+        Entry entry
+    ) noexcept(false);
     void removeEntry(const std::string& item, const size_t& index) noexcept(false);
 
     void save() const;

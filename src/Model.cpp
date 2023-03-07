@@ -54,6 +54,27 @@ void Model::addEntry(const std::string& item, Entry entry) noexcept(false)
     _getItem(item).addEntry(entry);
 }
 
+void Model::editItem(
+    const std::string& origItem,
+    const std::string& newItem
+) noexcept
+{
+    const auto itemRange = _items.equal_range(origItem);
+    std::pair<std::string, Item> item = *itemRange.first;
+    item.first = newItem;
+    _items.erase(itemRange.first);
+    _items.insert(item);
+}
+
+void Model::editEntry(
+    const std::string & item,
+    const size_t entryIndex,
+    Entry entry
+) noexcept(false)
+{
+    _getItem(item).editEntry(entryIndex, entry);
+}
+
 void Model::removeEntry(const std::string& item, const size_t& index) noexcept(false)
 {
     _getItem(item).removeEntry(index);

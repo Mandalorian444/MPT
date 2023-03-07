@@ -45,6 +45,8 @@ public:
 
     void clear() noexcept;
 
+    void operator=(const Entry& entry) noexcept;
+
     bool operator==(const Entry& entry) const noexcept;
     bool operator!=(const Entry& entry) const noexcept;
 };
@@ -64,5 +66,6 @@ public:
     size_t getEntriesCount() const noexcept;
 
     void addEntry(Entry entry);
+    void editEntry(const size_t index, Entry entry) noexcept(false);
     void removeEntry(const size_t& index);
 };

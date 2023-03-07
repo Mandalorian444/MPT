@@ -19,129 +19,143 @@ enum class Column: int
     Count
 };
 
-void ItemView::_popupItemFields(Application& app)
+void ItemView::_popupItemFields(Application& app, PopupOptions options)
 {
     ImGuiInputTextFlags textInputFlags = 0
         //| ImGuiInputTextFlags_EnterReturnsTrue
         ;
+    if (options == PopupOptions::EntryOnly)
+    {
+        ImGui::BeginDisabled();
+    }
+
     ImGui::Text("Item Name");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    std::string itemName = _tempItemName;
+    std::string itemName = _tempNewItemName;
     if (ImGui::InputText("##ItemNameInput", &itemName, textInputFlags))
     {
-        _tempItemName = itemName;
+        _tempNewItemName = itemName;
     }
 
-    ImGui::Text("Price");
-    ImGui::SameLine();
-    float price = _tempEntry.getPrice();
-    if (ImGui::InputFloat("##PriceInput", &price, 0.01f, 10.0f, "$%.2f", textInputFlags | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CharsNoBlank))
+    if (options == PopupOptions::EntryOnly)
     {
-        _tempEntry.setPrice(price);
+        ImGui::EndDisabled();
     }
 
-    ImGui::Text("Day");
-    ImGui::SameLine();
-    const int day = _tempEntry.getDate().getDay().get();
-    ImGui::SetNextItemWidth(ImGui::CalcTextSize("000000").x);
-    if (ImGui::BeginCombo("##DayCombo", std::to_string(day).c_str()))
+    if (options != PopupOptions::ItemOnly)
     {
-        bool selectedDay = false;
-        for (unsigned char i = 1u; i <= MonthDayRange[static_cast<unsigned char>(_tempEntry.getDate().getMonth().get())].second; ++i)
+        ImGui::Text("Price");
+        ImGui::SameLine();
+        float price = _tempEntry.getPrice();
+        if (ImGui::InputFloat("##PriceInput", &price, 0.01f, 10.0f, "$%.2f", textInputFlags | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CharsNoBlank))
         {
-            if (_tempEntry.getDate().getDay().get() == i)
-            {
-                selectedDay = true;
-            }
-
-            std::string dayNum(std::to_string(i));
-            if (ImGui::Selectable(dayNum.c_str(), &selectedDay))
-            {
-                _tempEntry.setDate(
-                    {
-                        i,
-                        _tempEntry.getDate().getMonth().get(),
-                        _tempEntry.getDate().getYear().get()
-                    }
-                );
-            }
-            selectedDay = false;
+            _tempEntry.setPrice(price);
         }
-        ImGui::EndCombo();
-    }
 
-    ImGui::SameLine();
-    ImGui::Text("Month");
-    ImGui::SetNextItemWidth(ImGui::CalcTextSize("December+0000").x);
-    ImGui::SameLine();
-    if (ImGui::BeginCombo("##MonthCombo", _tempEntry.getDate().getMonth().getAbbreviatedName()))
-    {
-        bool selectedMonth = false;
-        for (unsigned char i = 0u; i < static_cast<unsigned char>(Months::Count); ++i)
+        ImGui::Text("Day");
+        ImGui::SameLine();
+        const int day = _tempEntry.getDate().getDay().get();
+        ImGui::SetNextItemWidth(ImGui::CalcTextSize("000000").x);
+        if (ImGui::BeginCombo("##DayCombo", std::to_string(day).c_str()))
         {
-            if (i == static_cast<unsigned char>(_tempEntry.getDate().getMonth().get()))
+            bool selectedDay = false;
+            for (unsigned char i = 1u; i <= MonthDayRange[static_cast<unsigned char>(_tempEntry.getDate().getMonth().get())].second; ++i)
             {
-                selectedMonth = true;
-            }
+                if (_tempEntry.getDate().getDay().get() == i)
+                {
+                    selectedDay = true;
+                }
 
-            if (ImGui::Selectable(MonthNames[i], &selectedMonth))
-            {
-                _tempEntry.setDate(
-                    {
-                        _tempEntry.getDate().getDay().get(),
-                        static_cast<Months>(i),
-                        _tempEntry.getDate().getYear().get()
-                    }
-                );
+                std::string dayNum(std::to_string(i));
+                if (ImGui::Selectable(dayNum.c_str(), &selectedDay))
+                {
+                    _tempEntry.setDate(
+                        {
+                            i,
+                            _tempEntry.getDate().getMonth().get(),
+                            _tempEntry.getDate().getYear().get()
+                        }
+                    );
+                }
+                selectedDay = false;
             }
-            selectedMonth = false;
+            ImGui::EndCombo();
         }
-        ImGui::EndCombo();
-    }
 
-    ImGui::SameLine();
-    ImGui::Text("Year");
-    ImGui::SameLine();
-    int year = _tempEntry.getDate().getYear().get();
-    ImGui::SetNextItemWidth(ImGui::CalcTextSize("9999+0000+0000").x);
-    if (ImGui::InputInt("##YearInput", &year))
-    {
-        _tempEntry.setDate(
+        ImGui::SameLine();
+        ImGui::Text("Month");
+        ImGui::SetNextItemWidth(ImGui::CalcTextSize("December+0000").x);
+        ImGui::SameLine();
+        if (ImGui::BeginCombo("##MonthCombo", _tempEntry.getDate().getMonth().getAbbreviatedName()))
+        {
+            bool selectedMonth = false;
+            for (unsigned char i = 0u; i < static_cast<unsigned char>(Months::Count); ++i)
             {
-                _tempEntry.getDate().getDay().get(),
-                _tempEntry.getDate().getMonth().get(),
-                year
+                if (i == static_cast<unsigned char>(_tempEntry.getDate().getMonth().get()))
+                {
+                    selectedMonth = true;
+                }
+
+                if (ImGui::Selectable(MonthNames[i], &selectedMonth))
+                {
+                    _tempEntry.setDate(
+                        {
+                            _tempEntry.getDate().getDay().get(),
+                            static_cast<Months>(i),
+                            _tempEntry.getDate().getYear().get()
+                        }
+                    );
+                }
+                selectedMonth = false;
             }
-        );
+            ImGui::EndCombo();
+        }
+
+        ImGui::SameLine();
+        ImGui::Text("Year");
+        ImGui::SameLine();
+        int year = _tempEntry.getDate().getYear().get();
+        ImGui::SetNextItemWidth(ImGui::CalcTextSize("9999+0000+0000").x);
+        if (ImGui::InputInt("##YearInput", &year))
+        {
+            _tempEntry.setDate(
+                {
+                    _tempEntry.getDate().getDay().get(),
+                    _tempEntry.getDate().getMonth().get(),
+                    year
+                }
+            );
+        }
+
+        ImGui::Text("Brand");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        std::string brand = _tempEntry.getBrand();
+        if (ImGui::InputText("##ItemBrandInput", &brand, textInputFlags))
+        {
+            _tempEntry.setBrand(brand);
+        }
+
+        ImGui::Text("Store");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        std::string store = _tempEntry.getStore();
+        if (ImGui::InputText("##ItemStoreInput", &store, textInputFlags))
+        {
+            _tempEntry.setStore(store);
+        }
+
+        ImGui::Text("Location");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        std::string location = _tempEntry.getLocation();
+        if (ImGui::InputText("##ItemLocationInput", &location, textInputFlags))
+        {
+            _tempEntry.setLocation(location);
+        }
     }
 
-    ImGui::Text("Brand");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    std::string brand = _tempEntry.getBrand();
-    if (ImGui::InputText("##ItemBrandInput", &brand, textInputFlags))
-    {
-        _tempEntry.setBrand(brand);
-    }
-
-    ImGui::Text("Store");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    std::string store = _tempEntry.getStore();
-    if (ImGui::InputText("##ItemStoreInput", &store, textInputFlags))
-    {
-        _tempEntry.setStore(store);
-    }
-
-    ImGui::Text("Location");
-    ImGui::SameLine();
-    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-    std::string location = _tempEntry.getLocation();
-    if (ImGui::InputText("##ItemLocationInput", &location, textInputFlags))
-    {
-        _tempEntry.setLocation(location);
-    }
 }
 
 void ItemView::onImGuiRender(Application& app)
@@ -194,6 +208,7 @@ void ItemView::onImGuiRender(Application& app)
                     if (ImGui::Selectable(entry.getDate().getAbbreviatedDateWordString().c_str(), &selectedEntry, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
                     {
                         _selectedItem = it.first;
+                        _selectedEntryIndex = entryCount;
                         _selectedEntry = entry;
                     }
                     //ImGui::Text(entry.getDate().getAbbreviatedDateWordString().c_str());
@@ -231,9 +246,17 @@ void ItemView::onImGuiRender(Application& app)
         if (ImGui::Button("Edit item"))
         {
             ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::EditItem)]);
-            _tempItemName = _selectedItem;
+            _tempNewItemName = _tempOrigItemName = _selectedItem;
             _tempEntry = _selectedEntry;
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Edit entry"))
+        {
+            ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::EditEntry)]);
+            _tempNewItemName = _tempOrigItemName = _selectedItem;
+            _tempEntry = _selectedEntry;
+        }
+        //  TODO: removeItem, removeEntry
 
         if (ImGui::IsPopupOpen(PopupNames[static_cast<int>(Popup::AddItem)]))
         {
@@ -243,14 +266,15 @@ void ItemView::onImGuiRender(Application& app)
 
                 if (ImGui::Button("Add Item"))
                 {
-                    app.getModel().addItem(_tempItemName, _tempEntry);
-                    _tempItemName.clear();
+                    app.getModel().addItem(_tempOrigItemName, _tempEntry);
+                    _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Close popup"))
                 {
-                    _tempItemName.clear();
+                    _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
@@ -261,18 +285,22 @@ void ItemView::onImGuiRender(Application& app)
         {
             if (ImGui::BeginPopupModal(PopupNames[static_cast<int>(Popup::EditItem)]))
             {
-                _popupItemFields(app);
+                _popupItemFields(app, PopupOptions::ItemOnly);
 
                 if (ImGui::Button("Save"))
                 {
-                    //  TODO: save edits
-                    _tempItemName.clear();
+                    app.getModel().editItem(_tempOrigItemName, _tempNewItemName);
+                    _selectedItem = _tempNewItemName;
+                    _selectedEntry = _tempEntry;
+                    _tempOrigItemName.clear();
+                    _tempNewItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
-                    _tempItemName.clear();
+                    _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
@@ -283,18 +311,24 @@ void ItemView::onImGuiRender(Application& app)
         {
             if (ImGui::BeginPopupModal(PopupNames[static_cast<int>(Popup::EditEntry)]))
             {
-                _popupItemFields(app);
+                _popupItemFields(app, PopupOptions::EntryOnly);
 
                 if (ImGui::Button("Save"))
                 {
-                    //  TODO: save edits
-                    _tempItemName.clear();
+                    app.getModel().editEntry(
+                        _tempOrigItemName,
+                        static_cast<size_t>(_selectedEntryIndex),
+                        _tempEntry
+                    );
+                    _selectedEntry = _tempEntry;
+                    _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
-                    _tempItemName.clear();
+                    _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
                 }
