@@ -11,8 +11,7 @@ private:
 
 public:
     bool getShouldStop() const noexcept { return _shouldStop; }
+    Model& getModel() noexcept { return _model; }
 
     void setShouldStop() noexcept { _shouldStop = true; }
-
-    Model& getModel() noexcept { return _model; }
 };

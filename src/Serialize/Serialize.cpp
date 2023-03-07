@@ -53,7 +53,6 @@ void MPT::Deserialize(
                 date
             );
             addItemCallback(name, entry);
-            //items.insert({ name, entry });
 
         }
     }
