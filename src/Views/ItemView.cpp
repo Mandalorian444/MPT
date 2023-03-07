@@ -158,6 +158,13 @@ void ItemView::_popupItemFields(Application& app, PopupOptions options)
 
 }
 
+void ItemView::_cleanupAfterEdit() noexcept
+{
+    _tempNewItemName.clear();
+    _tempOrigItemName.clear();
+    _tempEntry.clear();
+}
+
 void ItemView::onImGuiRender(Application& app)
 {
     if (ImGui::Begin("ItemView"))
@@ -267,16 +274,14 @@ void ItemView::onImGuiRender(Application& app)
 
                 if (ImGui::Button("Add Item"))
                 {
-                    model.addItem(_tempOrigItemName, _tempEntry);
-                    _tempOrigItemName.clear();
-                    _tempEntry.clear();
+                    model.addItem(_tempNewItemName, _tempEntry);
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
-                    _tempOrigItemName.clear();
-                    _tempEntry.clear();
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
@@ -293,16 +298,13 @@ void ItemView::onImGuiRender(Application& app)
                     model.editItem(_tempOrigItemName, _tempNewItemName);
                     model.setSelectedItem(_tempNewItemName);
                     model.setSelectedEntry(_tempEntry);
-                    _tempOrigItemName.clear();
-                    _tempNewItemName.clear();
-                    _tempEntry.clear();
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
-                    _tempOrigItemName.clear();
-                    _tempEntry.clear();
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
@@ -322,15 +324,13 @@ void ItemView::onImGuiRender(Application& app)
                         _tempEntry
                     );
                     model.setSelectedEntry(_tempEntry);
-                    _tempOrigItemName.clear();
-                    _tempEntry.clear();
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
-                    _tempOrigItemName.clear();
-                    _tempEntry.clear();
+                    _cleanupAfterEdit();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();

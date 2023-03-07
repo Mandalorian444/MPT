@@ -24,6 +24,7 @@ private:
         Application& app,
         PopupOptions options = static_cast<PopupOptions>(0)
     );
+    void _cleanupAfterEdit() noexcept;
 public:
     void onImGuiRender(Application& app) override;
 };
