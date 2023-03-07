@@ -12,6 +12,7 @@ private:
     std::string _tempItemName;
     Entry _tempEntry;
 
+    void _popupItemFields(Application& app);
 public:
     void onImGuiRender(Application& app) override;
 };
