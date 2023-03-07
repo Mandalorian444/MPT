@@ -36,6 +36,31 @@ size_t Model::getItemsCount() const noexcept
     return _items.size();
 }
 
+const std::string& Model::getSelectedItem() const noexcept
+{
+    return _selectedItem;
+}
+
+const Entry& Model::getSelectedEntry() const noexcept
+{
+    return _selectedEntry;
+}
+
+void Model::setSelectedItem(const std::string& item) noexcept
+{
+    _selectedItem = item;
+}
+
+void Model::setSelectedEntry(const Entry& entry) noexcept
+{
+    _selectedEntry = entry;
+}
+
+void Model::deselectedCurrentEntry() noexcept
+{
+    _selectedEntry.clear();
+}
+
 void Model::addItem(const std::string& item, Entry entry) noexcept
 {
     try

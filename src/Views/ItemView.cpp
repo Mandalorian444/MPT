@@ -189,13 +189,13 @@ void ItemView::onImGuiRender(Application& app)
             for (auto it : items)
             {
                 ImGui::PushID(itemCount);
-                bool selectedItem = it.first == _selectedItem;
+                bool selectedItem = it.first == model.getSelectedItem();
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(static_cast<int>(Column::Item));
                 if (ImGui::Selectable(it.first.c_str(), &selectedItem, ImGuiSelectableFlags_SpanAllColumns))
                 {
-                    _selectedItem = it.first;
-                    _selectedEntry.clear();
+                    model.setSelectedItem(it.first);
+                    model.deselectedCurrentEntry();
                 }
 
                 const std::vector<Entry>& entries = it.second.getEntries();
@@ -203,14 +203,14 @@ void ItemView::onImGuiRender(Application& app)
                 for (auto entry : entries)
                 {
                     ImGui::PushID(entryCount);
-                    bool selectedEntry = entry == _selectedEntry;
+                    bool selectedEntry = entry == model.getSelectedEntry();
                     ImGui::TableNextRow();
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Date));
                     if (ImGui::Selectable(entry.getDate().getAbbreviatedDateWordString().c_str(), &selectedEntry, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
                     {
-                        _selectedItem = it.first;
+                        model.setSelectedItem(it.first);
                         _selectedEntryIndex = entryCount;
-                        _selectedEntry = entry;
+                        model.setSelectedEntry(entry);
                     }
                     //ImGui::Text(entry.getDate().getAbbreviatedDateWordString().c_str());
 
@@ -247,15 +247,15 @@ void ItemView::onImGuiRender(Application& app)
         if (ImGui::Button("Edit item"))
         {
             ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::EditItem)]);
-            _tempNewItemName = _tempOrigItemName = _selectedItem;
-            _tempEntry = _selectedEntry;
+            _tempNewItemName = _tempOrigItemName = model.getSelectedItem();
+            _tempEntry = model.getSelectedEntry();
         }
         ImGui::SameLine();
         if (ImGui::Button("Edit entry"))
         {
             ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::EditEntry)]);
-            _tempNewItemName = _tempOrigItemName = _selectedItem;
-            _tempEntry = _selectedEntry;
+            _tempNewItemName = _tempOrigItemName = model.getSelectedItem();
+            _tempEntry = model.getSelectedEntry();
         }
         //  TODO: removeItem, removeEntry
 
@@ -291,8 +291,8 @@ void ItemView::onImGuiRender(Application& app)
                 if (ImGui::Button("Save"))
                 {
                     model.editItem(_tempOrigItemName, _tempNewItemName);
-                    _selectedItem = _tempNewItemName;
-                    _selectedEntry = _tempEntry;
+                    model.setSelectedItem(_tempNewItemName);
+                    model.setSelectedEntry(_tempEntry);
                     _tempOrigItemName.clear();
                     _tempNewItemName.clear();
                     _tempEntry.clear();
@@ -321,7 +321,7 @@ void ItemView::onImGuiRender(Application& app)
                         static_cast<size_t>(_selectedEntryIndex),
                         _tempEntry
                     );
-                    _selectedEntry = _tempEntry;
+                    model.setSelectedEntry(_tempEntry);
                     _tempOrigItemName.clear();
                     _tempEntry.clear();
                     ImGui::CloseCurrentPopup();
