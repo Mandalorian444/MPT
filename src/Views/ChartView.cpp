@@ -12,7 +12,7 @@ void ChartView::onImGuiRender(Application& app)
         {
             const Item& item = model.getItem(model.getSelectedItem());
             const std::vector<Entry>& entries = item.getEntries();
-            if (ImPlot::BeginPlot("Price/Time"))
+            if (ImPlot::BeginPlot("Price/Time", ImGui::GetContentRegionAvail()))
             {
                 ImPlot::SetupAxes("Date", "Price $(USD)");
                 ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Time);
