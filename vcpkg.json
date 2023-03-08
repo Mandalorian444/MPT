@@ -23,8 +23,8 @@
         { "name": "glfw3", "version": "3.3.8" },
         { "name": "glew", "version": "2.2.0" },
         { "name": "glm", "version": "0.9.9.8#1" },
-        { "name": "imgui", "version": "1.88#1" },
-        { "name": "implot", "version": "0.13" },
+        { "name": "imgui", "version": "1.89.3" },
+        { "name": "implot", "version": "0.14" },
         { "name": "pugixml", "version": "1.12.1#1"}
     ]
 }
