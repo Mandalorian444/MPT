@@ -2,6 +2,8 @@
 
 #include <exception>
 
+#include <Views/ChartView.h>
+#include <Views/ItemView.h>
 #include <Views/PopUps.h>
 
 
@@ -10,6 +12,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <implot.h>
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 
@@ -56,6 +59,7 @@ void View::_init()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(_window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
+    ImPlot::CreateContext();
 }
 
 void View::_stageView(std::unique_ptr<Viewable> view)
@@ -67,12 +71,14 @@ View::View(Application* app)
 {
     _init();
     _views.push_back(std::make_unique<ItemView>());
+    _views.push_back(std::make_unique<ChartView>());
     _app = app;
 }
 
 View::~View()
 {
     // Cleanup
+    ImPlot::DestroyContext();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -110,16 +116,14 @@ void View::render() noexcept(false)
             {
                 _stageView(std::move(std::make_unique<ItemView>()));
             }
+            if (ImGui::MenuItem("Graph"))
+            {
+                _stageView(std::move(std::make_unique<ChartView>()));
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
-
-    if (ImGui::Begin("Hello World!"))
-    {
-        ImGui::Text("Simple text");
-    }
-    ImGui::End();
 
     for (auto& it : _views)
     {

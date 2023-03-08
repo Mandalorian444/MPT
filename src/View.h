@@ -7,7 +7,6 @@
 
 #include <Application.h>
 #include <Views/Viewable.h>
-#include <Views/ItemView.h>
 
 
 class View
