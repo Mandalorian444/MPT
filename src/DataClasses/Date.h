@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <string>
 #include <utility>
 
@@ -198,6 +199,7 @@ public:
     inline Day getDay() const noexcept { return _day; }
     inline Month getMonth() const noexcept { return _month; }
     inline Year getYear() const noexcept { return _year; }
+    std::tm getDate() const noexcept;
 
     //  DD/MM/YYYY
     std::string getDateNumberString() const noexcept;
