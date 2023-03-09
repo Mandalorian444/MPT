@@ -13,62 +13,6 @@ static const std::vector<MPT::FileType> mptExtensions
     {"mpt", std::vector<std::string>{".mpt"}}
 };
 
-MPT::FileData::FileData(const std::filesystem::path& path)
-  : _filepath(path)
-{
-    _fileSize = GetFileSize(path);
-    _fileSizeString = GetFileSizeString(path);
-}
-
-std::string MPT::FileData::getFileCreatedDateString() const noexcept
-{
-    Date date = TmToDate(_fileCreatedDate);
-    return date.getAbbreviatedDateWordString();
-}
-
-std::string MPT::FileData::getFileLastWriteDateString() const noexcept
-{
-    Date date = TmToDate(_fileLastWriteDate);
-    return date.getAbbreviatedDateWordString();
-}
-
-void MPT::FileData::setFilepath(const std::filesystem::path& filepath) noexcept
-{
-    _filepath = filepath;
-}
-
-void MPT::FileData::clear() noexcept
-{
-    _fileSize = 0;
-    _filepath.clear();
-    _fileSizeString.clear();
-}
-
-std::string MPT::FileData::toString() const
-{
-    return _filepath.string();
-}
-
-MPT::FileData& MPT::FileData::operator=(const FileData& file)
-{
-    this->_fileSize = file._fileSize;
-    this->_filepath = file._filepath;
-    this->_fileSizeString = file._fileSizeString;
-    return *this;
-}
-
-bool MPT::FileData::operator==(const FileData& file) const noexcept
-{
-    return _fileSize    == file._fileSize       &&
-        _filepath       == file._filepath       &&
-        _fileSizeString == file._fileSizeString;
-}
-
-bool MPT::FileData::operator!=(const FileData& file) const noexcept
-{
-    return !(*this == file);
-}
-
 std::string MPT::StringToLower(const std::string& string)
 {
     std::string stringToLower = string;
@@ -249,4 +193,60 @@ std::string MPT::GetFileSizeString(const std::filesystem::path& file)
         return std::string(std::to_string(mantissa).substr(0, zeroes) + "BKMGTPE"[i]);
     }
     return "";
+}
+
+MPT::FileData::FileData(const std::filesystem::path& path)
+    : _filepath(path)
+{
+    _fileSize = GetFileSize(path);
+    _fileSizeString = GetFileSizeString(path);
+}
+
+std::string MPT::FileData::getFileCreatedDateString() const noexcept
+{
+    Date date = TmToDate(_fileCreatedDate);
+    return date.getAbbreviatedDateWordString();
+}
+
+std::string MPT::FileData::getFileLastWriteDateString() const noexcept
+{
+    Date date = TmToDate(_fileLastWriteDate);
+    return date.getAbbreviatedDateWordString();
+}
+
+void MPT::FileData::setFilepath(const std::filesystem::path& filepath) noexcept
+{
+    _filepath = filepath;
+}
+
+void MPT::FileData::clear() noexcept
+{
+    _fileSize = 0;
+    _filepath.clear();
+    _fileSizeString.clear();
+}
+
+std::string MPT::FileData::toString() const
+{
+    return _filepath.string();
+}
+
+MPT::FileData& MPT::FileData::operator=(const FileData& file)
+{
+    this->_fileSize = file._fileSize;
+    this->_filepath = file._filepath;
+    this->_fileSizeString = file._fileSizeString;
+    return *this;
+}
+
+bool MPT::FileData::operator==(const FileData& file) const noexcept
+{
+    return _fileSize    == file._fileSize       &&
+        _filepath       == file._filepath       &&
+        _fileSizeString == file._fileSizeString;
+}
+
+bool MPT::FileData::operator!=(const FileData& file) const noexcept
+{
+    return !(*this == file);
 }

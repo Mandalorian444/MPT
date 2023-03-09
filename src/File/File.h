@@ -26,6 +26,14 @@ namespace MPT
     std::tm DateToTm(const Date& date);
     Date TmToDate(const std::tm& tm);
 
+    std::vector<std::filesystem::path> GetRootDirs();
+    std::vector<std::filesystem::path> GetDirContents(const std::filesystem::path& directory);
+    size_t GetFileSize(const std::filesystem::path& file);
+    std::tm GetFileCreatedDate(const std::filesystem::path& file);
+    std::tm GetFileLastWriteDate(const std::filesystem::path& file);
+    //  Return size as human readable string
+    std::string GetFileSizeString(const std::filesystem::path& file);
+
     class FileType
     {
     private:
@@ -172,12 +180,4 @@ namespace MPT
     };
 
     const std::vector<FileType>* ValidMPTExtensions();
-
-    std::vector<std::filesystem::path> GetRootDirs();
-    std::vector<std::filesystem::path> GetDirContents(const std::filesystem::path& directory);
-    size_t GetFileSize(const std::filesystem::path& file);
-    std::tm GetFileCreatedDate(const std::filesystem::path& file);
-    std::tm GetFileLastWriteDate(const std::filesystem::path& file);
-    //  Return size as human readable string
-    std::string GetFileSizeString(const std::filesystem::path& file);
 }
