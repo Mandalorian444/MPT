@@ -22,7 +22,7 @@ void MPT::Deserialize(
     document.load_file(filepath.c_str());
     for (auto itemIt = document.begin(); itemIt != document.end(); ++itemIt)
     {
-        const std::string name = itemIt->name();
+        const std::string name = itemIt->attribute("Name").as_string();
         for (auto entryIt = itemIt->begin(); entryIt != itemIt->end(); ++entryIt)
         {
             const float attribPrice =
@@ -77,13 +77,16 @@ void MPT::Serialize(
         items.end(),
         [&](std::pair<std::string, Item> item)
         {
-            pugi::xml_node node = document.append_child(item.first.c_str());
+            pugi::xml_node node = document.append_child("Item");
+            pugi::xml_attribute name =
+                node.append_attribute("Name");
+            name.set_value(item.first.c_str());
             const Item current = item.second;
             const std::vector<Entry>& entries = current.getEntries();
             size_t entryNum = 0ull;
             for (auto it : entries)
             {
-                pugi::xml_node entry = node.append_child("");
+                pugi::xml_node entry = node.append_child("Entry");
                 pugi::xml_attribute price =
                     entry.append_attribute("Price");
                 price.set_value(it.getPrice());
