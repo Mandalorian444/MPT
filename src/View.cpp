@@ -3,6 +3,7 @@
 #include <exception>
 
 #include <Views/ChartView.h>
+#include <Views/FileDialogView.h>
 #include <Views/ItemView.h>
 #include <Views/PopUps.h>
 
@@ -102,11 +103,76 @@ void View::render() noexcept(false)
         {
             if (ImGui::MenuItem("Open"))
             {
-                _app->getModel().openProject();
+                if (_app->getModel().getProjFilepath().empty())
+                {
+                    _stageView(
+                        std::move(
+                            std::make_unique<FileDialogView>(
+                                *MPT::GetRootDirs().begin(),
+                                MPT::FileDialogPurpose::Open,
+                                MPT::FileExtension::MPT
+                                )
+                        )
+                    );
+                }
+                else
+                {
+                    _stageView(
+                        std::move(
+                            std::make_unique<FileDialogView>(
+                                _app->getModel().getProjFilepath(),
+                                MPT::FileDialogPurpose::Open,
+                                MPT::FileExtension::MPT
+                                )
+                        )
+                    );
+                }
             }
             if (ImGui::MenuItem("Save"))
             {
-                _app->getModel().save();
+                try
+                {
+                    _app->getModel().save();
+                }
+                catch (const std::exception&)
+                {
+                    _stageView(
+                        std::move(
+                            std::make_unique<FileDialogView>(
+                                *MPT::GetRootDirs().begin(),
+                                MPT::FileDialogPurpose::Save,
+                                MPT::FileExtension::MPT
+                                )
+                        )
+                    );
+                }
+            }
+            if (ImGui::MenuItem("Save as"))
+            {
+                if (_app->getModel().getProjFilepath().empty())
+                {
+                    _stageView(
+                        std::move(
+                            std::make_unique<FileDialogView>(
+                                *MPT::GetRootDirs().begin(),
+                                MPT::FileDialogPurpose::Save,
+                                MPT::FileExtension::MPT
+                                )
+                        )
+                    );
+                }
+                else
+                {
+                    _stageView(
+                        std::move(
+                            std::make_unique<FileDialogView>(
+                                _app->getModel().getProjFilepath(),
+                                MPT::FileDialogPurpose::Save,
+                                MPT::FileExtension::MPT
+                                )
+                        )
+                    );
+                }
             }
             ImGui::EndMenu();
         }
