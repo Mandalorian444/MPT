@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <DataClasses/Date.h>
+
 
 namespace MPT
 {
@@ -21,6 +23,8 @@ namespace MPT
     };
 
     std::string StringToLower(const std::string& string);
+    std::tm DateToTm(const Date& date);
+    Date TmToDate(const std::tm& tm);
 
     class FileType
     {
@@ -94,12 +98,14 @@ namespace MPT
         size_t _fileSize;
         std::filesystem::path _filepath;
         std::string _fileSizeString;
+        std::tm _fileCreatedDate;
         std::tm _fileLastWriteDate;
     public:
         FileData()
           : _filepath(),
             _fileSize(0),
             _fileSizeString(""),
+            _fileCreatedDate(),
             _fileLastWriteDate()
         {}
 
@@ -107,11 +113,13 @@ namespace MPT
             const std::filesystem::path& path,
             size_t size,
             const std::string& sizeString,
+            std::tm createdDate,
             std::tm lastWriteDate
         )
           : _filepath(path),
             _fileSize(size),
             _fileSizeString(sizeString),
+            _fileCreatedDate(createdDate),
             _fileLastWriteDate(lastWriteDate)
         {}
 
@@ -126,6 +134,11 @@ namespace MPT
         {
             return _fileSizeString;
         }
+        inline std::tm getFileCreatedDate() const noexcept
+        {
+            return _fileCreatedDate;
+        }
+        std::string getFileCreatedDateString() const noexcept;
         inline std::tm getFileLastWriteDate() const noexcept
         {
             return _fileLastWriteDate;
@@ -163,6 +176,7 @@ namespace MPT
     std::vector<std::filesystem::path> GetRootDirs();
     std::vector<std::filesystem::path> GetDirContents(const std::filesystem::path& directory);
     size_t GetFileSize(const std::filesystem::path& file);
+    std::tm GetFileCreatedDate(const std::filesystem::path& file);
     std::tm GetFileLastWriteDate(const std::filesystem::path& file);
     //  Return size as human readable string
     std::string GetFileSizeString(const std::filesystem::path& file);

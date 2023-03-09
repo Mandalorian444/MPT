@@ -7,8 +7,6 @@
 #include <Windows.h>
 #include <fileapi.h>
 
-#include <DataClasses/Date.h>
-
 
 static const std::vector<MPT::FileType> mptExtensions
 {
@@ -22,17 +20,15 @@ MPT::FileData::FileData(const std::filesystem::path& path)
     _fileSizeString = GetFileSizeString(path);
 }
 
+std::string MPT::FileData::getFileCreatedDateString() const noexcept
+{
+    Date date = TmToDate(_fileCreatedDate);
+    return date.getAbbreviatedDateWordString();
+}
+
 std::string MPT::FileData::getFileLastWriteDateString() const noexcept
 {
-    if (_fileLastWriteDate.tm_mday < 0)
-    {
-        return "";
-    }
-    Date date(
-        static_cast<unsigned char>(_fileLastWriteDate.tm_mday),
-        static_cast<Months>(_fileLastWriteDate.tm_mon),
-        _fileLastWriteDate.tm_year
-    );
+    Date date = TmToDate(_fileLastWriteDate);
     return date.getAbbreviatedDateWordString();
 }
 
@@ -83,6 +79,45 @@ std::string MPT::StringToLower(const std::string& string)
         ::tolower
     );
     return std::move(stringToLower);
+}
+
+std::tm MPT::DateToTm(const Date& date)
+{
+    std::tm tm;
+    tm.tm_mday  = date.getDay().get();
+    tm.tm_mon   = date.getMonth().getMonthNumber();
+    tm.tm_year  = date.getYear().get();
+    return std::tm();
+}
+
+Date MPT::TmToDate(const std::tm& tm)
+{
+    if (
+        tm.tm_mday < 0  || tm.tm_mday > 31  ||
+        tm.tm_mon < 0   || tm.tm_mon > 12   ||
+        tm.tm_year < 0
+        )
+    {
+        return Date();
+    }
+    Date date(
+        static_cast<unsigned char>(tm.tm_mday),
+        static_cast<Months>(tm.tm_mon),
+        tm.tm_year
+    );
+    return date;
+}
+
+std::tm STimeToTm(LPSYSTEMTIME sTime)
+{
+    std::tm tm;
+    tm.tm_sec     = sTime->wSecond;
+    tm.tm_min     = sTime->wMinute;
+    tm.tm_hour    = sTime->wHour;
+    tm.tm_mday    = sTime->wDay;
+    tm.tm_mon     = sTime->wMonth;
+    tm.tm_year    = sTime->wYear;
+    return tm;
 }
 
 const std::vector<MPT::FileType>* MPT::ValidMPTExtensions()
@@ -143,6 +178,17 @@ size_t MPT::GetFileSize(const std::filesystem::path& file)
     return 0;
 }
 
+std::tm MPT::GetFileCreatedDate(const std::filesystem::path& file)
+{
+    //  WINDOWS ONLY
+    _WIN32_FILE_ATTRIBUTE_DATA fileData;
+    GetFileAttributesEx(file.c_str(), GetFileExInfoStandard, &fileData);
+    _SYSTEMTIME sysTime;
+    FileTimeToSystemTime(&fileData.ftCreationTime, &sysTime);
+    std::tm time = STimeToTm(&sysTime);
+    return time;
+}
+
 std::tm MPT::GetFileLastWriteDate(const std::filesystem::path& file)
 {
     //  WINDOWS ONLY
@@ -150,13 +196,7 @@ std::tm MPT::GetFileLastWriteDate(const std::filesystem::path& file)
     GetFileAttributesEx(file.c_str(), GetFileExInfoStandard, &fileData);
     _SYSTEMTIME sysTime;
     FileTimeToSystemTime(&fileData.ftLastWriteTime, &sysTime);
-    std::tm time;
-    time.tm_sec     = sysTime.wSecond;
-    time.tm_min     = sysTime.wMinute;
-    time.tm_hour    = sysTime.wHour;
-    time.tm_mday    = sysTime.wDay;
-    time.tm_mon     = sysTime.wMonth;
-    time.tm_year    = sysTime.wYear;
+    std::tm time = STimeToTm(&sysTime);
     return time;
 
     //  Some inprecision, but may work cross-platform
