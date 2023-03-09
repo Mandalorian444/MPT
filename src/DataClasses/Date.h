@@ -77,10 +77,10 @@ private:
 
 public:
     Day()
-        : _day(1)
+      : _day(1)
     {}
     Day(unsigned char day)
-        : _day(day)
+      : _day(day)
     {}
 
     inline void set(unsigned char day) noexcept { _day = day; }
@@ -106,13 +106,13 @@ private:
 
 public:
     Month()
-        : _month(Months::January)
+      : _month(Months::January)
     {}
     Month(Months month)
-        : _month(month)
+      : _month(month)
     {}
     Month(const Month& month)
-        : _month(month._month)
+      : _month(month._month)
     {}
     inline void set(const Months& month) noexcept { _month = month; }
 
@@ -140,13 +140,13 @@ private:
 
 public:
     Year()
-        : _year(0)
+      : _year(0)
     {}
     Year(int year)
-        : _year(year)
+      : _year(year)
     {}
     Year(const Year& year)
-        : _year(year._year)
+      : _year(year._year)
     {}
 
     inline void set(int year) noexcept { _year = year; }

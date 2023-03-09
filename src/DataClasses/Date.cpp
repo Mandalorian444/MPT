@@ -28,10 +28,10 @@ std::tm Date::getDate() const noexcept
 {
     constexpr const int epoch = 1900;
     std::tm date;
-    date.tm_year = _year.get() - epoch;
-    date.tm_mon = static_cast<int>(_month.get());
-    date.tm_mday = static_cast<int>(_day.get());
-    date.tm_sec = date.tm_min = date.tm_hour = 0;
+    date.tm_year    = _year.get() - epoch;
+    date.tm_mon     = static_cast<int>(_month.get());
+    date.tm_mday    = static_cast<int>(_day.get());
+    date.tm_sec     = date.tm_min = date.tm_hour = 0;
     return date;
 }
 
