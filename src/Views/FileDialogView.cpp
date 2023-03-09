@@ -23,11 +23,22 @@ void FillDirContents(
         )
     )
     {
-        contents.push_back(
-            MPT::FileData(it.path(),
-            MPT::GetFileSize(it.path()),
-            MPT::GetFileSizeString(it.path()))
-        );
+        if (it.is_regular_file())
+        {
+            contents.push_back(
+                MPT::FileData(
+                    it.path(),
+                    MPT::GetFileSize(it.path()),
+                    MPT::GetFileSizeString(it.path()),
+                    MPT::GetFileCreatedDate(it.path()),
+                    MPT::GetFileLastWriteDate(it.path())
+                )
+            );
+        }
+        else
+        {
+            contents.push_back(MPT::FileData(it.path()));
+        }
     }
 }
 
@@ -391,6 +402,7 @@ void FileDialogView::onImGuiRender(Application& app)
                 {
                     ImGui::TableSetupColumn("Filename");
                     ImGui::TableSetupColumn("Size");
+                    ImGui::TableSetupColumn("Date created");
                     ImGui::TableSetupColumn("Date modified");
                     //  Keep header visible
                     ImGui::TableSetupScrollFreeze(0, 1);
@@ -428,6 +440,12 @@ void FileDialogView::onImGuiRender(Application& app)
                             }
                             ImGui::TableNextColumn();
                             ImGui::Text(it->getFileSizeString().c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::Text(it->getFileCreatedDateString().c_str());
+
+                            ImGui::TableNextColumn();
+                            ImGui::Text(it->getFileLastWriteDateString().c_str());
 
                             ImGui::TableNextColumn();
                             selected = false;
