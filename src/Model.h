@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <unordered_map>
 
 #include <DataClasses/Item.h>
@@ -11,6 +12,7 @@ private:
     std::unordered_map<std::string, Item> _items;
     std::string _selectedItem;
     Entry _selectedEntry;
+    std::filesystem::path _projFilepath;
 
     Item& _getItem(const std::string& item) noexcept(false);
 public:
@@ -19,6 +21,7 @@ public:
     size_t getItemsCount() const noexcept;
     const std::string& getSelectedItem() const noexcept;
     const Entry& getSelectedEntry() const noexcept;
+    const std::filesystem::path& getProjFilepath() const noexcept;
 
     void setSelectedItem(const std::string& item) noexcept;
     void setSelectedEntry(const Entry& entry) noexcept;
@@ -37,9 +40,9 @@ public:
     ) noexcept(false);
     void removeEntry(const std::string& item, const size_t& index) noexcept(false);
 
-    void save() const;
-    //void saveAs() const;
+    void save() const noexcept(false);
+    void saveAs(const std::filesystem::path& filepath);
     //void newProject();
-    void openProject();
+    void openProject(std::filesystem::path filepath);
     //void closeProject();
 };

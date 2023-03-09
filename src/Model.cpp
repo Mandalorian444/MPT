@@ -46,6 +46,11 @@ const Entry& Model::getSelectedEntry() const noexcept
     return _selectedEntry;
 }
 
+const std::filesystem::path& Model::getProjFilepath() const noexcept
+{
+    return _projFilepath;
+}
+
 void Model::setSelectedItem(const std::string& item) noexcept
 {
     _selectedItem = item;
@@ -105,16 +110,34 @@ void Model::removeEntry(const std::string& item, const size_t& index) noexcept(f
     _getItem(item).removeEntry(index);
 }
 
-void Model::save() const
+void Model::save() const noexcept(false)
 {
-    std::filesystem::path filepath("./MPT_save_file.xml");
-    MPT::Serialize(filepath, _items);
+    if (!_projFilepath.empty())
+    {
+        MPT::Serialize(_projFilepath, _items);
+    }
+    else
+    {
+        throw std::exception("Project not yet saved");
+    }
 }
 
-void Model::openProject()
+void Model::saveAs(const std::filesystem::path& filepath)
+{
+    if (!filepath.empty())
+    {
+        _projFilepath = filepath;
+        MPT::Serialize(_projFilepath, _items);
+    }
+    else
+    {
+        throw std::exception("No filepath provided");
+    }
+}
+
+void Model::openProject(std::filesystem::path filepath)
 {
     _items.clear();
-    std::filesystem::path filepath("./MPT_save_file.xml");
     MPT::Deserialize(
         filepath,
         _items,
