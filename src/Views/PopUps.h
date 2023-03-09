@@ -9,6 +9,7 @@ enum class Popup: int
     EditEntry,
     RemoveItem,
     RemoveEntry,
+    SaveOverwrite,
     Count
 };
 
@@ -19,5 +20,6 @@ constexpr const char* PopupNames[] =
     "Edit Item",
     "Edit Entry",
     "Remove Item",
-    "Remove Entry"
+    "Remove Entry",
+    "Overwrite"
 };

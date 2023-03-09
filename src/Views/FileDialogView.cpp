@@ -8,6 +8,7 @@
 #include <imgui_stdlib.h>
 
 #include <File/File.h>
+#include <Views/PopUps.h>
 
 #define DEFAULT_FILTER_SELECTION ".* (all)"
 
@@ -614,8 +615,30 @@ void FileDialogView::onImGuiRender(Application& app)
                     {
                         _selected.getFilepath().replace_extension(".mpt");
                     }
-                    app.getModel().saveAs(_selected.getFilepath());
-                    _open = false;
+
+                    if (std::filesystem::exists(_selected.getFilepath()))
+                    {
+                        ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::SaveOverwrite)]);
+                    }
+                }
+            }
+            if (ImGui::IsPopupOpen(PopupNames[static_cast<int>(Popup::SaveOverwrite)]))
+            {
+                if (ImGui::BeginPopupModal(PopupNames[static_cast<int>(Popup::SaveOverwrite)]))
+                {
+                    ImGui::TextWrapped("Are you sure you want to overwrite this file?");
+                    if (ImGui::Button("Yes"))
+                    {
+                        app.getModel().saveAs(_selected.getFilepath());
+                        _open = false;
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Cancel"))
+                    {
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::EndPopup();
                 }
             }
         }
