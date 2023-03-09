@@ -23,8 +23,6 @@ namespace MPT
     };
 
     std::string StringToLower(const std::string& string);
-    std::tm DateToTm(const Date& date);
-    Date TmToDate(const std::tm& tm);
 
     std::vector<std::filesystem::path> GetRootDirs();
     std::vector<std::filesystem::path> GetDirContents(const std::filesystem::path& directory);

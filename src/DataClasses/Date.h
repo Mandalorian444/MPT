@@ -210,3 +210,6 @@ public:
     bool operator==(const Date& date) const noexcept;
     bool operator!=(const Date& date) const noexcept;
 };
+
+std::tm DateToTm(const Date& date);
+Date TmToDate(const std::tm& tm);

@@ -25,33 +25,6 @@ std::string MPT::StringToLower(const std::string& string)
     return std::move(stringToLower);
 }
 
-std::tm MPT::DateToTm(const Date& date)
-{
-    std::tm tm;
-    tm.tm_mday  = date.getDay().get();
-    tm.tm_mon   = date.getMonth().getMonthNumber();
-    tm.tm_year  = date.getYear().get();
-    return std::tm();
-}
-
-Date MPT::TmToDate(const std::tm& tm)
-{
-    if (
-        tm.tm_mday < 0  || tm.tm_mday > 31  ||
-        tm.tm_mon < 0   || tm.tm_mon > 12   ||
-        tm.tm_year < 0
-        )
-    {
-        return Date();
-    }
-    Date date(
-        static_cast<unsigned char>(tm.tm_mday),
-        static_cast<Months>(tm.tm_mon),
-        tm.tm_year
-    );
-    return date;
-}
-
 std::tm STimeToTm(LPSYSTEMTIME sTime)
 {
     std::tm tm;
