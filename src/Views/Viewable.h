@@ -9,4 +9,5 @@ class Viewable
 {
 public:
     virtual void onImGuiRender(Application& app) = 0;
+    virtual bool shouldClose() = 0;
 };

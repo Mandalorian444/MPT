@@ -16,6 +16,7 @@ enum class PopupOptions : int
 class ItemView : public Viewable
 {
 private:
+    bool _open = true;
     std::string _tempOrigItemName, _tempNewItemName;
     Entry _tempEntry;
     int _selectedEntryIndex;
@@ -27,4 +28,5 @@ private:
     void _cleanupAfterEdit() noexcept;
 public:
     void onImGuiRender(Application& app) override;
+    virtual bool shouldClose() override { return !_open; }
 };

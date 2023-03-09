@@ -125,9 +125,15 @@ void View::render() noexcept(false)
         ImGui::EndMainMenuBar();
     }
 
-    for (auto& it : _views)
+    for (auto it = _views.begin(); it != _views.end();)
     {
-        it->onImGuiRender(*_app);
+        it->get()->onImGuiRender(*_app);
+        if (it->get()->shouldClose())
+        {
+            it = _views.erase(it);
+            continue;
+        }
+        ++it;
     }
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
