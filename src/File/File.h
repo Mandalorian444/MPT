@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -93,21 +94,25 @@ namespace MPT
         size_t _fileSize;
         std::filesystem::path _filepath;
         std::string _fileSizeString;
+        std::tm _fileLastWriteDate;
     public:
         FileData()
           : _filepath(),
             _fileSize(0),
-            _fileSizeString("")
+            _fileSizeString(""),
+            _fileLastWriteDate()
         {}
 
         FileData(
             const std::filesystem::path& path,
             size_t size,
-            const std::string& sizeString
+            const std::string& sizeString,
+            std::tm lastWriteDate
         )
           : _filepath(path),
             _fileSize(size),
-            _fileSizeString(sizeString)
+            _fileSizeString(sizeString),
+            _fileLastWriteDate(lastWriteDate)
         {}
 
         FileData(const std::filesystem::path& path);
@@ -121,12 +126,21 @@ namespace MPT
         {
             return _fileSizeString;
         }
+        inline std::tm getFileLastWriteDate() const noexcept
+        {
+            return _fileLastWriteDate;
+        }
+        std::string getFileLastWriteDateString() const noexcept;
 
         void setFilepath(const std::filesystem::path& filepath) noexcept;
         inline void setFileSize(const size_t& fileSize) noexcept { _fileSize = fileSize; }
         inline void setFileSizeString(const std::string& sizeString) noexcept
         {
             _fileSizeString = sizeString;
+        }
+        inline void setFileLastWriteDate(const std::tm& createdDate) noexcept
+        {
+            _fileLastWriteDate = createdDate;
         }
 
         inline bool empty() const noexcept { return _filepath.empty(); }
@@ -149,6 +163,7 @@ namespace MPT
     std::vector<std::filesystem::path> GetRootDirs();
     std::vector<std::filesystem::path> GetDirContents(const std::filesystem::path& directory);
     size_t GetFileSize(const std::filesystem::path& file);
+    std::tm GetFileLastWriteDate(const std::filesystem::path& file);
     //  Return size as human readable string
     std::string GetFileSizeString(const std::filesystem::path& file);
 }

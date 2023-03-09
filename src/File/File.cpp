@@ -1,5 +1,14 @@
 #include "File.h"
 
+#include <ctime>
+#include <sstream>
+
+//  WINDOWS ONLY
+#include <Windows.h>
+#include <fileapi.h>
+
+#include <DataClasses/Date.h>
+
 
 static const std::vector<MPT::FileType> mptExtensions
 {
@@ -11,6 +20,20 @@ MPT::FileData::FileData(const std::filesystem::path& path)
 {
     _fileSize = GetFileSize(path);
     _fileSizeString = GetFileSizeString(path);
+}
+
+std::string MPT::FileData::getFileLastWriteDateString() const noexcept
+{
+    if (_fileLastWriteDate.tm_mday < 0)
+    {
+        return "";
+    }
+    Date date(
+        static_cast<unsigned char>(_fileLastWriteDate.tm_mday),
+        static_cast<Months>(_fileLastWriteDate.tm_mon),
+        _fileLastWriteDate.tm_year
+    );
+    return date.getAbbreviatedDateWordString();
 }
 
 void MPT::FileData::setFilepath(const std::filesystem::path& filepath) noexcept
@@ -118,6 +141,38 @@ size_t MPT::GetFileSize(const std::filesystem::path& file)
         return std::filesystem::file_size(file);
     }
     return 0;
+}
+
+std::tm MPT::GetFileLastWriteDate(const std::filesystem::path& file)
+{
+    //  WINDOWS ONLY
+    _WIN32_FILE_ATTRIBUTE_DATA fileData;
+    GetFileAttributesEx(file.c_str(), GetFileExInfoStandard, &fileData);
+    _SYSTEMTIME sysTime;
+    FileTimeToSystemTime(&fileData.ftLastWriteTime, &sysTime);
+    std::tm time;
+    time.tm_sec     = sysTime.wSecond;
+    time.tm_min     = sysTime.wMinute;
+    time.tm_hour    = sysTime.wHour;
+    time.tm_mday    = sysTime.wDay;
+    time.tm_mon     = sysTime.wMonth;
+    time.tm_year    = sysTime.wYear;
+    return time;
+
+    //  Some inprecision, but may work cross-platform
+
+    //namespace ch = std::chrono;
+    ////  Prevent errors incase file is being used by another process
+    //std::error_code ec;
+    //std::filesystem::file_time_type lastWriteTime =
+    //    std::filesystem::last_write_time(file, ec);
+    //const ch::system_clock::time_point clock =
+    //    ch::clock_cast<ch::system_clock>(lastWriteTime);
+    //const time_t timet = ch::system_clock::to_time_t(clock);
+    //std::tm translatedTime;
+    //localtime_s(&translatedTime, &timet);
+    //translatedTime.tm_year += 1900;
+    //return translatedTime;
 }
 
 //  Return size as human readable string
