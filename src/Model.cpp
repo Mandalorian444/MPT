@@ -148,4 +148,5 @@ void Model::openProject(std::filesystem::path filepath)
             std::placeholders::_2
         )
     );
+    _projFilepath = filepath;
 }
