@@ -210,7 +210,7 @@ void ItemView::onImGuiRender(Application& app)
                 for (auto entry : entries)
                 {
                     ImGui::PushID(entryCount);
-                    bool selectedEntry = entry == model.getSelectedEntry();
+                    bool selectedEntry = selectedItem && entry == model.getSelectedEntry();
                     ImGui::TableNextRow();
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Date));
                     if (ImGui::Selectable(entry.getDate().getAbbreviatedDateWordString().c_str(), &selectedEntry, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
