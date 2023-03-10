@@ -162,7 +162,8 @@ void ItemView::_cleanupAfterEdit() noexcept
 {
     _tempNewItemName.clear();
     _tempOrigItemName.clear();
-    _tempEntry.clear();
+    //  Do not clear entry to keep fields populated in case user is inputting
+    //  multiple item entries that have lots of the same data
 }
 
 void ItemView::onImGuiRender(Application& app)
