@@ -79,8 +79,8 @@ std::tm DateToTm(const Date& date)
 Date TmToDate(const std::tm& tm)
 {
     if (
-        tm.tm_mday < 0  || tm.tm_mday > 31  ||
-        tm.tm_mon < 0   || tm.tm_mon > 12   ||
+        tm.tm_mday < 1  || tm.tm_mday > 31  ||
+        tm.tm_mon < 1   || tm.tm_mon > 12   ||
         tm.tm_year < 0
         )
     {
@@ -88,7 +88,7 @@ Date TmToDate(const std::tm& tm)
     }
     Date date(
         static_cast<unsigned char>(tm.tm_mday),
-        static_cast<Months>(tm.tm_mon),
+        static_cast<Months>(tm.tm_mon - 1),
         tm.tm_year
     );
     return date;
