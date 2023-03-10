@@ -36,7 +36,8 @@ void MPT::Deserialize(
             const unsigned char attribDay =
                 entryIt->attribute("Day").as_uint();
             const unsigned char attribMonth =
-                entryIt->attribute("Month").as_uint();
+                //  -1 because the serialized month is +1.  See func definition
+                entryIt->attribute("Month").as_uint() - 1;
             const int attribYear =
                 entryIt->attribute("Year").as_int();
 

@@ -117,6 +117,7 @@ public:
     inline void set(const Months& month) noexcept { _month = month; }
 
     inline Months get() const noexcept { return _month; }
+    //  DO NOT USE AS INDEX!!!!  +1 to be easily understood by humans
     inline unsigned char getMonthNumber() const noexcept { return static_cast<unsigned char>(_month) + 1; }
     inline const char* getName() const noexcept { return MonthNames[static_cast<int>(_month)]; }
     inline const char* getAbbreviatedName() const noexcept { return AbbreviatedMonthNames[static_cast<int>(_month)]; }
