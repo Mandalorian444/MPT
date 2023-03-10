@@ -54,10 +54,11 @@ constexpr const char* AbbreviatedMonthNames[] =
     "Dec"
 };
 
+//  Does not account for leap years
 constexpr std::pair<unsigned char, unsigned char> MonthDayRange[] =
 {
     {1, 31},    //  Jan
-    {1, 28},    //  Feb
+    {1, 29},    //  Feb
     {1, 31},    //  Mar
     {1, 30},    //  Apr
     {1, 31},    //  May
