@@ -26,13 +26,14 @@ void FillDirContents(
     {
         if (it.is_regular_file())
         {
+            const std::filesystem::path filepath = it.path();
             contents.push_back(
                 MPT::FileData(
-                    it.path(),
-                    MPT::GetFileSize(it.path()),
-                    MPT::GetFileSizeString(it.path()),
-                    MPT::GetFileCreatedDate(it.path()),
-                    MPT::GetFileLastWriteDate(it.path())
+                    filepath,
+                    MPT::GetFileSize(filepath),
+                    MPT::GetFileSizeString(filepath),
+                    MPT::GetFileCreatedDate(filepath),
+                    MPT::GetFileLastWriteDate(filepath)
                 )
             );
         }
@@ -448,7 +449,6 @@ void FileDialogView::onImGuiRender(Application& app)
                             ImGui::TableNextColumn();
                             ImGui::Text(it->getFileLastWriteDateString().c_str());
 
-                            ImGui::TableNextColumn();
                             selected = false;
                         }
                     }
