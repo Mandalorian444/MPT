@@ -169,10 +169,12 @@ std::string MPT::GetFileSizeString(const std::filesystem::path& file)
 }
 
 MPT::FileData::FileData(const std::filesystem::path& path)
-    : _filepath(path)
+  : _filepath(path)
 {
     _fileSize = GetFileSize(path);
     _fileSizeString = GetFileSizeString(path);
+    _fileCreatedDate = GetFileCreatedDate(path);
+    _fileLastWriteDate = GetFileLastWriteDate(path);
 }
 
 std::string MPT::FileData::getFileCreatedDateString() const noexcept
@@ -209,6 +211,8 @@ MPT::FileData& MPT::FileData::operator=(const FileData& file)
     this->_fileSize = file._fileSize;
     this->_filepath = file._filepath;
     this->_fileSizeString = file._fileSizeString;
+    this->_fileCreatedDate = file._fileCreatedDate;
+    this->_fileLastWriteDate = file._fileLastWriteDate;
     return *this;
 }
 
