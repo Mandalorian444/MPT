@@ -49,6 +49,9 @@ public:
 
     bool operator==(const Entry& entry) const noexcept;
     bool operator!=(const Entry& entry) const noexcept;
+
+    bool operator<(const Entry& entry) const noexcept;
+    bool operator>(const Entry& entry) const noexcept;
 };
 
 class Item

@@ -114,3 +114,27 @@ bool Entry::operator!=(const Entry& entry) const noexcept
 {
     return !(*this == entry);
 }
+
+bool Entry::operator<(const Entry& entry) const noexcept
+{
+    if (_brand < entry._brand)
+    {
+        return true;
+    }
+    else
+    {
+        return _date < entry._date;
+    }
+}
+
+bool Entry::operator>(const Entry& entry) const noexcept
+{
+    if (_brand > entry._brand)
+    {
+        return true;
+    }
+    else
+    {
+        return _date > entry._date;
+    }
+}
