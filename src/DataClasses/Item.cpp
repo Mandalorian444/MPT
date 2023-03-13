@@ -13,6 +13,25 @@ size_t Item::getEntriesCount() const noexcept
 void Item::addEntry(Entry entry)
 {
     _entries.push_back(std::move(entry));
+    qsort(
+        &_entries[0],
+        _entries.size(),
+        sizeof(Entry),
+        [](const void* a, const void* b)
+        {
+            const Entry* ap = static_cast<const Entry*>(a);
+            const Entry* bp = static_cast<const Entry*>(b);
+            if (*ap == *bp)
+            {
+                return 0;
+            }
+            else if (*ap < *bp)
+            {
+                return -1;
+            }
+            return 1;
+        }
+    );
 }
 
 void Item::editEntry(const size_t index, Entry entry) noexcept(false)
