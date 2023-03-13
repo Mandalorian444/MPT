@@ -163,15 +163,15 @@ public:
     inline bool operator!=(int year) const noexcept { return !(*this == year); }
     inline bool operator<(int year) const noexcept { return _year < year; }
     inline bool operator>(int year) const noexcept { return _year > year; }
-    inline bool operator<=(int year) const noexcept { return *this < year || *this == year; }
-    inline bool operator>=(int year) const noexcept { return *this > year || *this == year; }
+    inline bool operator<=(int year) const noexcept { return _year <= year; }
+    inline bool operator>=(int year) const noexcept { return _year >= year; }
 
     inline bool operator==(const Year& year) const noexcept { return *this == year._year; }
     inline bool operator!=(const Year& year) const noexcept { return !(*this == year); }
-    inline bool operator<(const Year& year) const noexcept { return *this < year; }
-    inline bool operator>(const Year& year) const noexcept { return *this > year; }
-    inline bool operator<=(const Year& year) const noexcept { return *this < year || *this == year; }
-    inline bool operator>=(const Year& year) const noexcept { return *this > year || *this == year; }
+    inline bool operator<(const Year& year) const noexcept { return *this < year._year; }
+    inline bool operator>(const Year& year) const noexcept { return *this > year._year; }
+    inline bool operator<=(const Year& year) const noexcept { return *this <= year._year; }
+    inline bool operator>=(const Year& year) const noexcept { return *this >= year._year; }
 };
 
 class Date
