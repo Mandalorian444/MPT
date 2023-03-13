@@ -67,6 +67,44 @@ bool Date::operator!=(const Date& date) const noexcept
     return !(*this == date);
 }
 
+bool Date::operator<(const Date& date) const noexcept
+{
+    if (_year < date._year)
+    {
+        return true;
+    }
+    else if (_year == date._year)
+    {
+        if (_month < date._month)
+        {
+            return true;
+        }
+        else if (_month == date._month)
+        {
+            if (_day < date._day)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Date::operator>(const Date& date) const noexcept
+{
+    return !(*this < date) && !(*this == date);
+}
+
+bool Date::operator<=(const Date& date) const noexcept
+{
+    return !(*this > date);
+}
+
+bool Date::operator>=(const Date& date) const noexcept
+{
+    return !(*this < date);
+}
+
 std::tm DateToTm(const Date& date)
 {
     std::tm tm;
