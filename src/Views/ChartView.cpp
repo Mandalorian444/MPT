@@ -6,7 +6,7 @@
 void ChartView::onImGuiRender(Application& app)
 {
     Model& model = app.getModel();
-    if (ImGui::Begin("Chart"))
+    if (ImGui::Begin(getID().c_str(), &_open))
     {
         try
         {

@@ -168,7 +168,7 @@ void ItemView::_cleanupAfterEdit() noexcept
 
 void ItemView::onImGuiRender(Application& app)
 {
-    if (ImGui::Begin("ItemView"))
+    if (ImGui::Begin(getID().c_str(), &_open))
     {
         Model& model = app.getModel();
         ImGuiStyle& style = ImGui::GetStyle();

@@ -176,8 +176,9 @@ std::filesystem::path FileDialogHistory::forward(const std::filesystem::path& di
     return *_it;
 }
 
-FileDialogView::FileDialogView()
-  : _open(false),
+FileDialogView::FileDialogView(const std::string& id)
+  : Viewable(id),
+    _open(false),
     _separatorX(50.0f),
     _purpose(MPT::FileDialogPurpose::Open),
     _rootDirs(MPT::GetRootDirs()),
@@ -186,11 +187,13 @@ FileDialogView::FileDialogView()
 {}
 
 FileDialogView::FileDialogView(
+    const std::string& id,
     std::filesystem::path inputDir,
     MPT::FileDialogPurpose purpose,
     MPT::FileExtension fileExtension
 )
-  : _open(true),
+  : Viewable(id),
+    _open(true),
     _separatorX(50.0f),
     _purpose(purpose),
     _currentDir(inputDir.parent_path()),
@@ -233,7 +236,8 @@ FileDialogView::FileDialogView(
 }
 
 FileDialogView::FileDialogView(const FileDialogView& dialog)
-  : _open(dialog._open),
+  : Viewable(dialog.getID()),
+    _open(dialog._open),
     _separatorX(dialog._separatorX),
     _purpose(dialog._purpose),
     _buttonText(dialog._buttonText),
@@ -285,7 +289,7 @@ void FileDialogView::onImGuiRender(Application& app)
             ;
         //  Set min size to something reasonable to avoid glitchy behavior
         ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, 200));
-        if (ImGui::Begin("FileDialog", &_open, windowFlags))
+        if (ImGui::Begin(getID().c_str(), &_open, windowFlags))
         {
             ImGuiStyle& style = ImGui::GetStyle();
             ImVec2 openCancelSize =

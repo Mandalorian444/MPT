@@ -44,8 +44,9 @@ private:
     std::vector<MPT::FileType> _extensionFilter;
 
 public:
-    FileDialogView();
+    FileDialogView(const std::string& id);
     FileDialogView(
+        const std::string& id,
         std::filesystem::path inputDir,
         MPT::FileDialogPurpose purpose,
         MPT::FileExtension fileExtension

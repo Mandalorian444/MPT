@@ -27,6 +27,10 @@ private:
     );
     void _cleanupAfterEdit() noexcept;
 public:
+    ItemView(const std::string& id)
+      : Viewable(id)
+    {}
+
     void onImGuiRender(Application& app) override;
     virtual bool shouldClose() override { return !_open; }
 };

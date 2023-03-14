@@ -30,6 +30,29 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+std::string CreateViewID(ViewNameIndex index, const std::vector<std::unique_ptr<Viewable>>& views)
+{
+    std::string baseID = ViewNames[static_cast<int>(index)];
+    baseID.append("##");
+    baseID.append(ViewNames[static_cast<int>(index)]);
+    size_t count = 0ull;
+    std::string retID = baseID;
+    retID.append(std::to_string(count));
+    for (size_t i = 0ull; i < views.size();)
+    {
+        if (views.at(i)->getID() == retID)
+        {
+            ++count;
+            retID = baseID;
+            retID.append(std::to_string(count));
+            i = 0ull;
+            continue;
+        }
+        ++i;
+    }
+    return retID;
+}
+
 void View::_init()
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -73,8 +96,8 @@ void View::_stageView(std::unique_ptr<Viewable> view)
 View::View(Application* app)
 {
     _init();
-    _views.push_back(std::make_unique<ItemView>());
-    _views.push_back(std::make_unique<ChartView>());
+    _views.push_back(std::make_unique<ItemView>(CreateViewID(ViewNameIndex::ItemView, _views)));
+    _views.push_back(std::make_unique<ChartView>(CreateViewID(ViewNameIndex::ChartView, _views)));
     _app = app;
 }
 
@@ -169,6 +192,7 @@ void View::render() noexcept(false)
                         _stageView(
                             std::move(
                                 std::make_unique<FileDialogView>(
+                                    CreateViewID(ViewNameIndex::ItemView, _views),
                                     *MPT::GetRootDirs().begin(),
                                     MPT::FileDialogPurpose::Open,
                                     MPT::FileExtension::MPT
@@ -181,6 +205,7 @@ void View::render() noexcept(false)
                         _stageView(
                             std::move(
                                 std::make_unique<FileDialogView>(
+                                    CreateViewID(ViewNameIndex::ItemView, _views),
                                     _app->getModel().getProjFilepath(),
                                     MPT::FileDialogPurpose::Open,
                                     MPT::FileExtension::MPT
@@ -200,6 +225,7 @@ void View::render() noexcept(false)
                         _stageView(
                             std::move(
                                 std::make_unique<FileDialogView>(
+                                    CreateViewID(ViewNameIndex::ItemView, _views),
                                     *MPT::GetRootDirs().begin(),
                                     MPT::FileDialogPurpose::Save,
                                     MPT::FileExtension::MPT
@@ -215,6 +241,7 @@ void View::render() noexcept(false)
                         _stageView(
                             std::move(
                                 std::make_unique<FileDialogView>(
+                                    CreateViewID(ViewNameIndex::ItemView, _views),
                                     *MPT::GetRootDirs().begin(),
                                     MPT::FileDialogPurpose::Save,
                                     MPT::FileExtension::MPT
@@ -227,6 +254,7 @@ void View::render() noexcept(false)
                         _stageView(
                             std::move(
                                 std::make_unique<FileDialogView>(
+                                    CreateViewID(ViewNameIndex::ItemView, _views),
                                     _app->getModel().getProjFilepath(),
                                     MPT::FileDialogPurpose::Save,
                                     MPT::FileExtension::MPT
@@ -245,11 +273,11 @@ void View::render() noexcept(false)
             {
                 if (ImGui::MenuItem("Items"))
                 {
-                    _stageView(std::move(std::make_unique<ItemView>()));
+                    _stageView(std::move(std::make_unique<ItemView>(CreateViewID(ViewNameIndex::ItemView, _views))));
                 }
                 if (ImGui::MenuItem("Graph"))
                 {
-                    _stageView(std::move(std::make_unique<ChartView>()));
+                    _stageView(std::move(std::make_unique<ChartView>(CreateViewID(ViewNameIndex::ChartView, _views))));
                 }
                 ImGui::EndMenu();
             }
