@@ -140,10 +140,11 @@ bool Entry::operator<(const Entry& entry) const noexcept
     {
         return true;
     }
-    else
+    else if (_brand == entry._brand)
     {
         return _date < entry._date;
     }
+    return false;
 }
 
 bool Entry::operator>(const Entry& entry) const noexcept
@@ -152,8 +153,9 @@ bool Entry::operator>(const Entry& entry) const noexcept
     {
         return true;
     }
-    else
+    else if (_brand == entry._brand)
     {
         return _date > entry._date;
     }
+    return false;
 }
