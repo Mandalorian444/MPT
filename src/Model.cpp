@@ -51,6 +51,11 @@ const std::filesystem::path& Model::getProjFilepath() const noexcept
     return _projFilepath;
 }
 
+bool Model::getSaved() const noexcept
+{
+    return _saved;
+}
+
 void Model::setSelectedItem(const std::string& item) noexcept
 {
     _selectedItem = item;
@@ -77,11 +82,13 @@ void Model::addItem(const std::string& item, Entry entry) noexcept
     {
         _items.insert({ item, Item(entry) });
     }
+    _saved = false;
 }
 
 void Model::addEntry(const std::string& item, Entry entry) noexcept(false)
 {
     _getItem(item).addEntry(entry);
+    _saved = false;
 }
 
 void Model::editItem(
@@ -94,6 +101,7 @@ void Model::editItem(
     item.first = newItem;
     _items.erase(itemRange.first);
     _items.insert(item);
+    _saved = false;
 }
 
 void Model::editEntry(
@@ -103,18 +111,21 @@ void Model::editEntry(
 ) noexcept(false)
 {
     _getItem(item).editEntry(entryIndex, entry);
+    _saved = false;
 }
 
 void Model::removeEntry(const std::string& item, const size_t& index) noexcept(false)
 {
     _getItem(item).removeEntry(index);
+    _saved = false;
 }
 
-void Model::save() const noexcept(false)
+void Model::save() noexcept(false)
 {
     if (!_projFilepath.empty())
     {
         MPT::Serialize(_projFilepath, _items);
+        _saved = true;
     }
     else
     {
@@ -128,6 +139,7 @@ void Model::saveAs(const std::filesystem::path& filepath)
     {
         _projFilepath = filepath;
         MPT::Serialize(_projFilepath, _items);
+        _saved = true;
     }
     else
     {
@@ -149,4 +161,12 @@ void Model::openProject(std::filesystem::path filepath)
         )
     );
     _projFilepath = filepath;
+    _saved = true;
+}
+
+void Model::closeProject()
+{
+    _items.clear();
+    _projFilepath.clear();
+    _saved = false;
 }

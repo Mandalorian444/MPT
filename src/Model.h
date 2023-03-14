@@ -13,6 +13,7 @@ private:
     std::string _selectedItem;
     Entry _selectedEntry;
     std::filesystem::path _projFilepath;
+    bool _saved;
 
     Item& _getItem(const std::string& item) noexcept(false);
 public:
@@ -22,6 +23,7 @@ public:
     const std::string& getSelectedItem() const noexcept;
     const Entry& getSelectedEntry() const noexcept;
     const std::filesystem::path& getProjFilepath() const noexcept;
+    bool getSaved() const noexcept;
 
     void setSelectedItem(const std::string& item) noexcept;
     void setSelectedEntry(const Entry& entry) noexcept;
@@ -40,9 +42,9 @@ public:
     ) noexcept(false);
     void removeEntry(const std::string& item, const size_t& index) noexcept(false);
 
-    void save() const noexcept(false);
+    void save() noexcept(false);
     void saveAs(const std::filesystem::path& filepath);
     //void newProject();
     void openProject(std::filesystem::path filepath);
-    //void closeProject();
+    void closeProject();
 };
