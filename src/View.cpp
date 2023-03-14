@@ -13,6 +13,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <imgui_internal.h>
 #include <implot.h>
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
@@ -50,6 +51,7 @@ void View::_init()
     }
     glfwMakeContextCurrent(_window);
     glfwSwapInterval(1);
+    glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE);
 
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -97,98 +99,163 @@ void View::render() noexcept(false)
     ImGui::NewFrame();
 
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-    if (ImGui::BeginMainMenuBar())
+    const ImGuiStyle& style = ImGui::GetStyle();
+    const float menuBarHeight = style.FramePadding.y * 2.0f + ImGui::CalcTextSize("MPT").y;
+    if (ImGui::BeginViewportSideBar("##TitleBar", ImGui::GetMainViewport(), ImGuiDir_Up, menuBarHeight, ImGuiWindowFlags_MenuBar))
     {
-        if (ImGui::BeginMenu("File"))
+        if (ImGui::BeginMenuBar())
         {
-            if (ImGui::MenuItem("Open"))
+            ImGui::Text("MPT");
+            if (!_app->getModel().getSaved())
             {
-                if (_app->getModel().getProjFilepath().empty())
+                ImGui::Text("*");
+            }
+            float windowXMax = ImGui::GetWindowWidth();
+
+            //  Window buttons
+            const ImVec2 windowButtonSize(menuBarHeight, menuBarHeight);
+            ImGui::SetCursorPosX(windowXMax - menuBarHeight);
+            if (ImGui::Button("X##Close", windowButtonSize))
+            {
+                _app->setShouldStop();
+            }
+            ImGui::SetCursorPosX(windowXMax - menuBarHeight * 2.0f - style.ItemSpacing.x);
+            if (ImGui::Button("^##Maximize", windowButtonSize))
+            {
+                if (glfwGetWindowAttrib(_window, GLFW_MAXIMIZED))
                 {
-                    _stageView(
-                        std::move(
-                            std::make_unique<FileDialogView>(
-                                *MPT::GetRootDirs().begin(),
-                                MPT::FileDialogPurpose::Open,
-                                MPT::FileExtension::MPT
-                                )
-                        )
-                    );
+                    glfwRestoreWindow(_window);
                 }
                 else
                 {
-                    _stageView(
-                        std::move(
-                            std::make_unique<FileDialogView>(
-                                _app->getModel().getProjFilepath(),
-                                MPT::FileDialogPurpose::Open,
-                                MPT::FileExtension::MPT
-                                )
-                        )
-                    );
+                    glfwMaximizeWindow(_window);
                 }
             }
-            if (ImGui::MenuItem("Save"))
+            ImGui::SetCursorPosX(windowXMax - menuBarHeight * 3.0f - style.ItemSpacing.x * 2.0f);
+            if (ImGui::Button("_##Minimize", windowButtonSize))
             {
-                try
-                {
-                    _app->getModel().save();
-                }
-                catch (const std::exception&)
-                {
-                    _stageView(
-                        std::move(
-                            std::make_unique<FileDialogView>(
-                                *MPT::GetRootDirs().begin(),
-                                MPT::FileDialogPurpose::Save,
-                                MPT::FileExtension::MPT
-                                )
-                        )
-                    );
-                }
+                glfwIconifyWindow(_window);
             }
-            if (ImGui::MenuItem("Save as"))
+
+            ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
+            ImGui::InvisibleButton("##TitleGrab", ImVec2(windowXMax, menuBarHeight));
+            if (ImGui::IsItemActive())
             {
-                if (_app->getModel().getProjFilepath().empty())
-                {
-                    _stageView(
-                        std::move(
-                            std::make_unique<FileDialogView>(
-                                *MPT::GetRootDirs().begin(),
-                                MPT::FileDialogPurpose::Save,
-                                MPT::FileExtension::MPT
-                                )
-                        )
-                    );
-                }
-                else
-                {
-                    _stageView(
-                        std::move(
-                            std::make_unique<FileDialogView>(
-                                _app->getModel().getProjFilepath(),
-                                MPT::FileDialogPurpose::Save,
-                                MPT::FileExtension::MPT
-                                )
-                        )
-                    );
-                }
+                int x, y;
+                glfwGetWindowPos(_window, &x, &y);
+                ImGuiIO& io = ImGui::GetIO();
+                const ImVec2 delta = io.MouseDelta;
+                x += static_cast<int>(delta.x);
+                y += static_cast<int>(delta.y);
+                glfwSetWindowPos(_window, x, y);
             }
-            ImGui::EndMenu();
+            ImGui::EndMenuBar();
         }
-        if (ImGui::BeginMenu("Window"))
+        ImGui::End();
+    }
+
+    if (ImGui::BeginViewportSideBar("##MenuBar", ImGui::GetMainViewport(), ImGuiDir_Up, menuBarHeight, ImGuiWindowFlags_MenuBar))
+    //if (ImGui::Begin("##MenuBar", 0, ImGuiWindowFlags_MenuBar))
+    {
+        ImGuiWindowFlags_UnsavedDocument;
+        if (ImGui::BeginMenuBar())
         {
-            if (ImGui::MenuItem("Items"))
+            if (ImGui::BeginMenu("File"))
             {
-                _stageView(std::move(std::make_unique<ItemView>()));
+                if (ImGui::MenuItem("Open"))
+                {
+                    if (_app->getModel().getProjFilepath().empty())
+                    {
+                        _stageView(
+                            std::move(
+                                std::make_unique<FileDialogView>(
+                                    *MPT::GetRootDirs().begin(),
+                                    MPT::FileDialogPurpose::Open,
+                                    MPT::FileExtension::MPT
+                                    )
+                            )
+                        );
+                    }
+                    else
+                    {
+                        _stageView(
+                            std::move(
+                                std::make_unique<FileDialogView>(
+                                    _app->getModel().getProjFilepath(),
+                                    MPT::FileDialogPurpose::Open,
+                                    MPT::FileExtension::MPT
+                                    )
+                            )
+                        );
+                    }
+                }
+                if (ImGui::MenuItem("Save"))
+                {
+                    try
+                    {
+                        _app->getModel().save();
+                    }
+                    catch (const std::exception&)
+                    {
+                        _stageView(
+                            std::move(
+                                std::make_unique<FileDialogView>(
+                                    *MPT::GetRootDirs().begin(),
+                                    MPT::FileDialogPurpose::Save,
+                                    MPT::FileExtension::MPT
+                                    )
+                            )
+                        );
+                    }
+                }
+                if (ImGui::MenuItem("Save as"))
+                {
+                    if (_app->getModel().getProjFilepath().empty())
+                    {
+                        _stageView(
+                            std::move(
+                                std::make_unique<FileDialogView>(
+                                    *MPT::GetRootDirs().begin(),
+                                    MPT::FileDialogPurpose::Save,
+                                    MPT::FileExtension::MPT
+                                    )
+                            )
+                        );
+                    }
+                    else
+                    {
+                        _stageView(
+                            std::move(
+                                std::make_unique<FileDialogView>(
+                                    _app->getModel().getProjFilepath(),
+                                    MPT::FileDialogPurpose::Save,
+                                    MPT::FileExtension::MPT
+                                    )
+                            )
+                        );
+                    }
+                }
+                if (ImGui::MenuItem("Close"))
+                {
+                    _app->getModel().closeProject();
+                }
+                ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Graph"))
+            if (ImGui::BeginMenu("Window"))
             {
-                _stageView(std::move(std::make_unique<ChartView>()));
+                if (ImGui::MenuItem("Items"))
+                {
+                    _stageView(std::move(std::make_unique<ItemView>()));
+                }
+                if (ImGui::MenuItem("Graph"))
+                {
+                    _stageView(std::move(std::make_unique<ChartView>()));
+                }
+                ImGui::EndMenu();
             }
-            ImGui::EndMenu();
+            ImGui::EndMenuBar();
         }
-        ImGui::EndMainMenuBar();
+        ImGui::End();
     }
 
     for (auto it = _views.begin(); it != _views.end();)
