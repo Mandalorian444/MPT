@@ -33,6 +33,7 @@ void ChartView::onImGuiRender(Application& app)
 
                 ImPlot::SetupAxes("Date", "Price $(USD)");
                 ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Time);
+                ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
                 if (_fit)
                 {
                     if (entryCount == 1)
