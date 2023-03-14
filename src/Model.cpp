@@ -7,7 +7,7 @@
 
 Item& Model::_getItem(const std::string& item) noexcept(false)
 {
-    std::unordered_map<std::string, Item>::iterator found = _items.find(item);
+    std::map<std::string, Item>::iterator found = _items.find(item);
     if (found != _items.end())
     {
         return found->second;
@@ -17,7 +17,7 @@ Item& Model::_getItem(const std::string& item) noexcept(false)
 
 const Item& Model::getItem(const std::string& item) const noexcept(false)
 {
-    std::unordered_map<std::string, Item>::const_iterator found =
+    std::map<std::string, Item>::const_iterator found =
         _items.find(item);
     if (found != _items.end())
     {
@@ -26,7 +26,7 @@ const Item& Model::getItem(const std::string& item) const noexcept(false)
     throw std::exception("Item not found");
 }
 
-const std::unordered_map<std::string, Item>& Model::getItems() const noexcept(false)
+const std::map<std::string, Item>& Model::getItems() const noexcept(false)
 {
     return _items;
 }

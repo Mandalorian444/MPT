@@ -1,7 +1,7 @@
 #pragma once
 
 #include <filesystem>
-#include <unordered_map>
+#include <map>
 
 #include <DataClasses/Item.h>
 
@@ -9,7 +9,7 @@
 class Model
 {
 private:
-    std::unordered_map<std::string, Item> _items;
+    std::map<std::string, Item> _items;
     std::string _selectedItem;
     Entry _selectedEntry;
     std::filesystem::path _projFilepath;
@@ -17,7 +17,7 @@ private:
     Item& _getItem(const std::string& item) noexcept(false);
 public:
     const Item& getItem(const std::string& item) const noexcept(false);
-    const std::unordered_map<std::string, Item>& getItems() const noexcept(false);
+    const std::map<std::string, Item>& getItems() const noexcept(false);
     size_t getItemsCount() const noexcept;
     const std::string& getSelectedItem() const noexcept;
     const Entry& getSelectedEntry() const noexcept;

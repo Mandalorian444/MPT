@@ -8,7 +8,7 @@
 
 void MPT::Deserialize(
     const std::filesystem::path& filepath,
-    std::unordered_map<std::string, Item>& items,
+    std::map<std::string, Item>& items,
     const std::function<void(const std::string&, Entry)>& addItemCallback
 ) noexcept(false)
 {
@@ -61,7 +61,7 @@ void MPT::Deserialize(
 
 void MPT::Serialize(
     const std::filesystem::path& filepath,
-    const std::unordered_map<std::string, Item>& items
+    const std::map<std::string, Item>& items
 ) noexcept(false)
 {
     std::ofstream outFile;
