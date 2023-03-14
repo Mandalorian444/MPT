@@ -7,6 +7,8 @@ class ChartView : public Viewable
 {
 private:
     bool _open = true;
+    bool _fit = true;
+
 public:
     ChartView(const std::string& id)
       : Viewable(id)
