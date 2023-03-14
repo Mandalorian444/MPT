@@ -620,6 +620,11 @@ void FileDialogView::onImGuiRender(Application& app)
                     {
                         ImGui::OpenPopup(PopupNames[static_cast<int>(Popup::SaveOverwrite)]);
                     }
+                    else
+                    {
+                        app.getModel().saveAs(_selected.getFilepath());
+                        _open = false;
+                    }
                 }
             }
             if (ImGui::IsPopupOpen(PopupNames[static_cast<int>(Popup::SaveOverwrite)]))
