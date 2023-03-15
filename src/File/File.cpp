@@ -175,6 +175,8 @@ MPT::FileData::FileData(const std::filesystem::path& path)
     _fileSizeString = GetFileSizeString(path);
     _fileCreatedDate = GetFileCreatedDate(path);
     _fileLastWriteDate = GetFileLastWriteDate(path);
+    std::error_code ec;
+    _isDirectory = std::filesystem::is_directory(path, ec);
 }
 
 std::string MPT::FileData::getFileCreatedDateString() const noexcept
@@ -187,6 +189,11 @@ std::string MPT::FileData::getFileLastWriteDateString() const noexcept
 {
     Date date = TmToDate(_fileLastWriteDate);
     return date.getAbbreviatedDateWordString();
+}
+
+bool MPT::FileData::getIsDirectory() const noexcept
+{
+    return _isDirectory;
 }
 
 void MPT::FileData::setFilepath(const std::filesystem::path& filepath) noexcept

@@ -33,7 +33,8 @@ void FillDirContents(
                     MPT::GetFileSize(filepath),
                     MPT::GetFileSizeString(filepath),
                     MPT::GetFileCreatedDate(filepath),
-                    MPT::GetFileLastWriteDate(filepath)
+                    MPT::GetFileLastWriteDate(filepath),
+                    false
                 )
             );
         }
@@ -416,8 +417,7 @@ void FileDialogView::onImGuiRender(Application& app)
                     bool selected = false;
                     for (auto it = _dirContents.begin(); it != _dirContents.end(); ++it)
                     {
-                        std::error_code ec;
-                        if (std::filesystem::is_directory(it->getFilepath(), ec))
+                        if (it->getIsDirectory())
                         {
                             ImGui::TableNextRow();
                             ImGui::TableSetColumnIndex(0);

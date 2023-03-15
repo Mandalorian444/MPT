@@ -106,13 +106,15 @@ namespace MPT
         std::string _fileSizeString;
         std::tm _fileCreatedDate;
         std::tm _fileLastWriteDate;
+        bool _isDirectory;
     public:
         FileData()
           : _filepath(),
             _fileSize(0),
             _fileSizeString(""),
             _fileCreatedDate(),
-            _fileLastWriteDate()
+            _fileLastWriteDate(),
+            _isDirectory(false)
         {}
 
         FileData(
@@ -120,13 +122,15 @@ namespace MPT
             size_t size,
             const std::string& sizeString,
             std::tm createdDate,
-            std::tm lastWriteDate
+            std::tm lastWriteDate,
+            bool isDirectory = false
         )
           : _filepath(path),
             _fileSize(size),
             _fileSizeString(sizeString),
             _fileCreatedDate(createdDate),
-            _fileLastWriteDate(lastWriteDate)
+            _fileLastWriteDate(lastWriteDate),
+            _isDirectory(isDirectory)
         {}
 
         FileData(const std::filesystem::path& path);
@@ -150,6 +154,7 @@ namespace MPT
             return _fileLastWriteDate;
         }
         std::string getFileLastWriteDateString() const noexcept;
+        bool getIsDirectory() const noexcept;
 
         void setFilepath(const std::filesystem::path& filepath) noexcept;
         inline void setFileSize(const size_t& fileSize) noexcept { _fileSize = fileSize; }
