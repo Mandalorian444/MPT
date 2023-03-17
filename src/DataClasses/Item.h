@@ -9,7 +9,8 @@
 class Entry
 {
 private:
-    float _price;
+    float _price = 0.0f;
+    float _quantity = 1.0f;
     std::string _store;
     std::string _location;
     std::string _brand;
@@ -21,8 +22,9 @@ private:
 
 public:
     Entry() {}
-    Entry(float price, std::string store, std::string location, std::string brand, Date date)
+    Entry(float price, float quantity, std::string store, std::string location, std::string brand, Date date)
       : _price(price),
+        _quantity(quantity),
         _store(store),
         _location(location),
         _brand(brand),
@@ -30,6 +32,7 @@ public:
     {}
 
     float getPrice() const noexcept;
+    float getQuantity() const noexcept;
     const std::string& getStore() const noexcept;
     const std::string& getLocation() const noexcept;
     const std::string& getBrand() const noexcept;
@@ -37,6 +40,7 @@ public:
     //Weight getWeight() const noexcept;
 
     void setPrice(const float price) noexcept;
+    void setQuantity(const float quantity) noexcept;
     void setStore(std::string store) noexcept;
     void setLocation(std::string location) noexcept;
     void setBrand(std::string brand) noexcept;

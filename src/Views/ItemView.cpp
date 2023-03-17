@@ -15,6 +15,7 @@ enum class Column: int
     Store,
     Location,
     Brand,
+    Quantity,
     Weight,
     Count
 };
@@ -154,6 +155,14 @@ void ItemView::_popupItemFields(Application& app, PopupOptions options)
         {
             _tempEntry.setLocation(location);
         }
+
+        ImGui::Text("Quantity");
+        ImGui::SameLine();
+        float quantity = _tempEntry.getQuantity();
+        if (ImGui::InputFloat("##QuantityInput", &quantity, 1.00f, 10.0f, "%.2f", textInputFlags | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CharsNoBlank))
+        {
+            _tempEntry.setQuantity(quantity);
+        }
     }
 
 }
@@ -189,6 +198,7 @@ void ItemView::onImGuiRender(Application& app)
             ImGui::TableSetupColumn("Store");
             ImGui::TableSetupColumn("Location");
             ImGui::TableSetupColumn("Brand");
+            ImGui::TableSetupColumn("Quantity");
             ImGui::TableSetupColumn("Weight");
             ImGui::TableHeadersRow();
 
@@ -220,12 +230,10 @@ void ItemView::onImGuiRender(Application& app)
                         _selectedEntryIndex = entryCount;
                         model.setSelectedEntry(entry);
                     }
-                    //ImGui::Text(entry.getDate().getAbbreviatedDateWordString().c_str());
 
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Price));
-                    std::string price = std::to_string(entry.getPrice());
                     //  Format our price with dollar sign and at least 2 decimal places
-                    ImGui::Text(("$" + price.substr(0, price.find('.') + 3u)).c_str());
+                    ImGui::Text("$%.2f", entry.getPrice());
 
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Store));
                     ImGui::Text(entry.getStore().c_str());
@@ -235,6 +243,9 @@ void ItemView::onImGuiRender(Application& app)
 
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Brand));
                     ImGui::Text(entry.getBrand().c_str());
+
+                    ImGui::TableSetColumnIndex(static_cast<int>(Column::Quantity));
+                    ImGui::Text("%.2f", entry.getQuantity());
 
                     //ImGui::TableSetColumnIndex(static_cast<int>(Column::Weight));
                     //ImGui::Text(entry.getWeight());

@@ -56,6 +56,11 @@ float Entry::getPrice() const noexcept
     return _price;
 }
 
+float Entry::getQuantity() const noexcept
+{
+    return _quantity;
+}
+
 const std::string& Entry::getStore() const noexcept
 {
     return _store;
@@ -81,6 +86,11 @@ void Entry::setPrice(const float price) noexcept
     _price = price;
 }
 
+void Entry::setQuantity(const float quantity) noexcept
+{
+    _quantity = quantity;
+}
+
 void Entry::setStore(std::string store) noexcept
 {
     _store = std::move(store);
@@ -104,6 +114,7 @@ void Entry::setDate(Date date) noexcept
 void Entry::clear() noexcept
 {
     _price = 0.0f;
+    _quantity = 1.0f;
     _store.clear();
     _location.clear();
     _brand.clear();
@@ -113,6 +124,7 @@ void Entry::clear() noexcept
 void Entry::operator=(const Entry& entry) noexcept
 {
     _price      = entry._price;
+    _quantity   = entry._quantity;
     _store      = entry._store;
     _location   = entry._location;
     _brand      = entry._brand;
@@ -123,6 +135,7 @@ bool Entry::operator==(const Entry& entry) const noexcept
 {
     return
         _price      == entry._price &&
+        _quantity   == entry._quantity &&
         _store      == entry._store &&
         _location   == entry._location &&
         _brand      == entry._brand &&
