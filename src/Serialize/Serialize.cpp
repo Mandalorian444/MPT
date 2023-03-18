@@ -33,6 +33,8 @@ void MPT::Deserialize(
                 entryIt->attribute("Location").as_string();
             const std::string attribBrand =
                 entryIt->attribute("Brand").as_string();
+            const std::string attribItemNumber =
+                entryIt->attribute("ItemNumber").as_string();
             const float attribQuantity =
                 entryIt->attribute("Quantity").as_float();
             const unsigned char attribDay =
@@ -54,6 +56,7 @@ void MPT::Deserialize(
                 attribStore,
                 attribLocation,
                 attribBrand,
+                attribItemNumber,
                 date
             );
             addItemCallback(name, entry);
@@ -103,6 +106,9 @@ void MPT::Serialize(
                 pugi::xml_attribute brand =
                     entry.append_attribute("Brand");
                 brand.set_value(it.getBrand().c_str());
+                pugi::xml_attribute itemNumber =
+                    entry.append_attribute("ItemNumber");
+                itemNumber.set_value(it.getItemNumber().c_str());
                 pugi::xml_attribute quantity =
                     entry.append_attribute("Quantity");
                 quantity.set_value(it.getQuantity());

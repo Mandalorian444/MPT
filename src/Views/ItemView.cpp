@@ -15,6 +15,7 @@ enum class Column: int
     Store,
     Location,
     Brand,
+    ItemNumber,
     Quantity,
     Weight,
     Count
@@ -156,6 +157,15 @@ void ItemView::_popupItemFields(Application& app, PopupOptions options)
             _tempEntry.setLocation(location);
         }
 
+        ImGui::Text("Item Number");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        std::string itemNumber = _tempEntry.getItemNumber();
+        if (ImGui::InputText("##ItemNumberInput", &itemNumber, textInputFlags))
+        {
+            _tempEntry.setItemNumber(itemNumber);
+        }
+
         ImGui::Text("Quantity");
         ImGui::SameLine();
         float quantity = _tempEntry.getQuantity();
@@ -198,6 +208,7 @@ void ItemView::onImGuiRender(Application& app)
             ImGui::TableSetupColumn("Store");
             ImGui::TableSetupColumn("Location");
             ImGui::TableSetupColumn("Brand");
+            ImGui::TableSetupColumn("Item Number");
             ImGui::TableSetupColumn("Quantity");
             ImGui::TableSetupColumn("Weight");
             ImGui::TableHeadersRow();
@@ -243,6 +254,9 @@ void ItemView::onImGuiRender(Application& app)
 
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Brand));
                     ImGui::Text(entry.getBrand().c_str());
+
+                    ImGui::TableSetColumnIndex(static_cast<int>(Column::ItemNumber));
+                    ImGui::Text(entry.getItemNumber().c_str());
 
                     ImGui::TableSetColumnIndex(static_cast<int>(Column::Quantity));
                     ImGui::Text("%.2f", entry.getQuantity());

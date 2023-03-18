@@ -76,6 +76,11 @@ const std::string& Entry::getBrand() const noexcept
     return _brand;
 }
 
+const std::string& Entry::getItemNumber() const noexcept
+{
+    return _itemNumber;
+}
+
 Date Entry::getDate() const noexcept
 {
     return _date;
@@ -106,6 +111,11 @@ void Entry::setBrand(std::string brand) noexcept
     _brand = std::move(brand);
 }
 
+void Entry::setItemNumber(std::string itemNumber) noexcept
+{
+    _itemNumber = itemNumber;
+}
+
 void Entry::setDate(Date date) noexcept
 {
     _date = std::move(date);
@@ -118,6 +128,7 @@ void Entry::clear() noexcept
     _store.clear();
     _location.clear();
     _brand.clear();
+    _itemNumber.clear();
     _date.setDate(Date(1, Months::January, 2023));
 }
 
@@ -128,6 +139,7 @@ void Entry::operator=(const Entry& entry) noexcept
     _store      = entry._store;
     _location   = entry._location;
     _brand      = entry._brand;
+    _itemNumber = entry._itemNumber;
     _date       = entry._date;
 }
 
@@ -139,6 +151,7 @@ bool Entry::operator==(const Entry& entry) const noexcept
         _store      == entry._store &&
         _location   == entry._location &&
         _brand      == entry._brand &&
+        _itemNumber == entry._itemNumber &&
         _date       == entry._date;
 }
 
